@@ -82,7 +82,11 @@ if (process.env.NODE_ENV !== "production") {
   });
   app.use(vite.middlewares);
 } else {
+  const path = await import("path");
   app.use(express.static("dist"));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.resolve("dist", "index.html"));
+  });
 }
 
 app.listen(PORT, "0.0.0.0", () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Youtube,
   Sparkles,
@@ -22,10 +22,14 @@ import {
   ChevronRight,
   Lightbulb,
   Megaphone,
-  AlertCircle
+  AlertCircle,
+  BookOpen
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateYouTubeMetadata, YouTubeMetadata } from './services/geminiService';
+import BlogList from './BlogList';
+import BlogArticlePage from './BlogArticle';
+import { blogArticles } from './blogData';
 
 const MOCK_RESULT: YouTubeMetadata = {
   titles: [
@@ -78,7 +82,26 @@ function persistHistory(data: YouTubeMetadata[]) {
   }
 }
 
+function useRouter() {
+  const [path, setPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const onPopState = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  const navigate = useCallback((to: string) => {
+    window.history.pushState(null, '', to);
+    setPath(to);
+    window.scrollTo(0, 0);
+  }, []);
+
+  return { path, navigate };
+}
+
 export default function App() {
+  const { path, navigate } = useRouter();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState('gemini-3-flash-preview');
@@ -138,17 +161,26 @@ export default function App() {
       {/* Header */}
       <header className="border-b border-white/10 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <button onClick={() => navigate('/')} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="bg-red-600 p-2 rounded-xl shadow-lg shadow-red-600/20">
               <Youtube className="w-6 h-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tighter leading-none">YT MetaGen <span className="text-red-500">AI</span></h1>
+            <div className="text-left">
+              <span className="text-xl font-black tracking-tighter leading-none block">YT MetaGen <span className="text-red-500">AI</span></span>
               <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Powered by Gemini</span>
             </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <button 
+          </button>
+          <nav className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/blog')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                path.startsWith('/blog') ? 'bg-red-500/10 text-red-400' : 'text-white/50 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Blog
+            </button>
+            <button
               onClick={() => setShowHistory(!showHistory)}
               className="p-3 hover:bg-white/5 rounded-xl transition-all relative group"
               title="Historique"
@@ -158,11 +190,11 @@ export default function App() {
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-black"></span>
               )}
             </button>
-          </div>
+          </nav>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-12 relative">
+      <main className="relative">
         {/* History Sidebar/Drawer */}
         <AnimatePresence>
           {showHistory && (
@@ -236,6 +268,14 @@ export default function App() {
             </>
           )}
         </AnimatePresence>
+
+        {/* Router */}
+        {path === '/blog' ? (
+          <BlogList onNavigate={navigate} />
+        ) : path.startsWith('/blog/') ? (
+          <BlogArticlePage slug={path.replace('/blog/', '')} onNavigate={navigate} />
+        ) : (
+        <div className="max-w-7xl mx-auto px-4 py-12">
 
         {/* Hero Section */}
         <section className="text-center mb-20">
@@ -620,20 +660,94 @@ export default function App() {
             ))}
           </section>
         )}
+
+        {/* Blog Preview Section on Home */}
+        {!displayResult && !loading && (
+          <section className="mt-20">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-black tracking-tight">
+                Derniers articles du <span className="text-red-500">blog</span>
+              </h2>
+              <button
+                onClick={() => navigate('/blog')}
+                className="text-xs text-white/30 hover:text-white transition-colors flex items-center gap-2 font-bold uppercase tracking-widest"
+              >
+                Tous les articles
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {blogArticles.slice(0, 3).map((article) => (
+                <button
+                  key={article.slug}
+                  onClick={() => navigate(`/blog/${article.slug}`)}
+                  className="glass-card p-6 text-left group hover:bg-white/[0.05] transition-colors"
+                >
+                  <span className="text-[10px] text-red-400 font-bold uppercase tracking-widest">{article.category}</span>
+                  <h3 className="text-sm font-bold mt-2 mb-3 group-hover:text-red-400 transition-colors leading-tight">
+                    {article.title}
+                  </h3>
+                  <p className="text-xs text-white/30 leading-relaxed line-clamp-2">{article.excerpt}</p>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+        </div>
+        )}
       </main>
 
       {/* Footer */}
       <footer className="py-20 border-t border-white/5 bg-black/20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="bg-white/5 p-2 rounded-lg">
-              <Youtube className="w-5 h-5 text-red-500" />
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            <div>
+              <button onClick={() => navigate('/')} className="flex items-center gap-3 mb-4">
+                <div className="bg-white/5 p-2 rounded-lg">
+                  <Youtube className="w-5 h-5 text-red-500" />
+                </div>
+                <span className="text-xl font-black tracking-tighter">YT MetaGen AI</span>
+              </button>
+              <p className="text-sm text-white/30 leading-relaxed">
+                Générateur de métadonnées YouTube optimisées par intelligence artificielle. Titres, descriptions, tags et plus encore.
+              </p>
             </div>
-            <span className="text-xl font-black tracking-tighter">YT MetaGen AI</span>
+            <div>
+              <h4 className="font-black text-xs uppercase tracking-widest text-white/50 mb-4">Outil</h4>
+              <ul className="space-y-2">
+                <li>
+                  <button onClick={() => navigate('/')} className="text-sm text-white/30 hover:text-white transition-colors">
+                    Générateur de métadonnées
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate('/blog')} className="text-sm text-white/30 hover:text-white transition-colors">
+                    Blog YouTube SEO
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-black text-xs uppercase tracking-widest text-white/50 mb-4">Articles populaires</h4>
+              <ul className="space-y-2">
+                {blogArticles.slice(0, 4).map(a => (
+                  <li key={a.slug}>
+                    <button
+                      onClick={() => navigate(`/blog/${a.slug}`)}
+                      className="text-sm text-white/30 hover:text-white transition-colors text-left leading-tight"
+                    >
+                      {a.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <p className="text-white/20 text-[10px] uppercase tracking-[0.4em]">
-            © 2025 • L'outil ultime pour les créateurs
-          </p>
+          <div className="border-t border-white/5 pt-8 text-center">
+            <p className="text-white/20 text-[10px] uppercase tracking-[0.4em]">
+              © 2025 • L'outil ultime pour les créateurs YouTube
+            </p>
+          </div>
         </div>
       </footer>
     </div>
