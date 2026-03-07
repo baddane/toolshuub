@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Youtube, 
-  Sparkles, 
-  Copy, 
-  Check, 
-  Loader2, 
-  Type as TypeIcon, 
-  AlignLeft, 
-  Hash, 
-  Image as ImageIcon, 
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Youtube,
+  Sparkles,
+  Copy,
+  Check,
+  Loader2,
+  Type as TypeIcon,
+  AlignLeft,
+  Hash,
+  Image as ImageIcon,
   Zap,
   RefreshCw,
   MessageSquare,
@@ -19,10 +19,17 @@ import {
   History,
   Trash2,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Lightbulb,
+  Megaphone,
+  AlertCircle,
+  BookOpen
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateYouTubeMetadata, YouTubeMetadata } from './services/geminiService';
+import BlogList from './BlogList';
+import BlogArticlePage from './BlogArticle';
+import { blogArticles } from './blogData';
 
 const MOCK_RESULT: YouTubeMetadata = {
   titles: [
@@ -56,46 +63,86 @@ const MOCK_RESULT: YouTubeMetadata = {
   longTailKeywords: ["comment dresser un chaton qui griffe", "méthode positive dressage chat adulte", "faire venir son chat quand on l'appelle"]
 };
 
+const MAX_INPUT_LENGTH = 200;
+
+function loadHistory(): YouTubeMetadata[] {
+  try {
+    const saved = localStorage.getItem('yt_meta_history');
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
+function persistHistory(data: YouTubeMetadata[]) {
+  try {
+    localStorage.setItem('yt_meta_history', JSON.stringify(data));
+  } catch {
+    // localStorage unavailable (private browsing, quota exceeded)
+  }
+}
+
+function useRouter() {
+  const [path, setPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const onPopState = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  const navigate = useCallback((to: string) => {
+    window.history.pushState(null, '', to);
+    setPath(to);
+    window.scrollTo(0, 0);
+  }, []);
+
+  return { path, navigate };
+}
+
 export default function App() {
+  const { path, navigate } = useRouter();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState('gemini-3-flash-preview');
   const [result, setResult] = useState<YouTubeMetadata | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [showExample, setShowExample] = useState(false);
-  const [history, setHistory] = useState<YouTubeMetadata[]>(() => {
-    const saved = localStorage.getItem('yt_meta_history');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<YouTubeMetadata[]>(loadHistory);
   const [showHistory, setShowHistory] = useState(false);
 
   const saveToHistory = (data: YouTubeMetadata) => {
-    // Avoid duplicates based on the first title
-    if (history.some(h => h.titles[0] === data.titles[0])) return;
-    
+    // Avoid duplicates based on all titles
+    const newTitles = data.titles.join('|');
+    if (history.some(h => h.titles.join('|') === newTitles)) return;
+
     const newHistory = [data, ...history.slice(0, 9)];
     setHistory(newHistory);
-    localStorage.setItem('yt_meta_history', JSON.stringify(newHistory));
+    persistHistory(newHistory);
   };
 
   const clearHistory = () => {
     setHistory([]);
-    localStorage.removeItem('yt_meta_history');
+    try { localStorage.removeItem('yt_meta_history'); } catch {}
   };
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    const trimmed = input.trim();
+    if (!trimmed) return;
+    if (trimmed.length > MAX_INPUT_LENGTH) return;
 
     setShowExample(false);
+    setError(null);
     setLoading(true);
     try {
-      const data = await generateYouTubeMetadata(input, selectedModel);
+      const data = await generateYouTubeMetadata(trimmed, selectedModel);
       setResult(data);
       saveToHistory(data);
-    } catch (error) {
-      console.error(error);
-      alert("Une erreur est survenue lors de la génération.");
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : "Une erreur est survenue lors de la génération.");
     } finally {
       setLoading(false);
     }
@@ -114,17 +161,26 @@ export default function App() {
       {/* Header */}
       <header className="border-b border-white/10 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <button onClick={() => navigate('/')} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="bg-red-600 p-2 rounded-xl shadow-lg shadow-red-600/20">
               <Youtube className="w-6 h-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tighter leading-none">YT MetaGen <span className="text-red-500">AI</span></h1>
-              <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Powered by Gemini 3.1</span>
+            <div className="text-left">
+              <span className="text-xl font-black tracking-tighter leading-none block">YT MetaGen <span className="text-red-500">AI</span></span>
+              <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Powered by Gemini</span>
             </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <button 
+          </button>
+          <nav className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/blog')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                path.startsWith('/blog') ? 'bg-red-500/10 text-red-400' : 'text-white/50 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Blog
+            </button>
+            <button
               onClick={() => setShowHistory(!showHistory)}
               className="p-3 hover:bg-white/5 rounded-xl transition-all relative group"
               title="Historique"
@@ -134,11 +190,11 @@ export default function App() {
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-black"></span>
               )}
             </button>
-          </div>
+          </nav>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-12 relative">
+      <main className="relative">
         {/* History Sidebar/Drawer */}
         <AnimatePresence>
           {showHistory && (
@@ -213,6 +269,14 @@ export default function App() {
           )}
         </AnimatePresence>
 
+        {/* Router */}
+        {path === '/blog' ? (
+          <BlogList onNavigate={navigate} />
+        ) : path.startsWith('/blog/') ? (
+          <BlogArticlePage slug={path.replace('/blog/', '')} onNavigate={navigate} />
+        ) : (
+        <div className="max-w-7xl mx-auto px-4 py-12">
+
         {/* Hero Section */}
         <section className="text-center mb-20">
           <motion.div
@@ -270,8 +334,9 @@ export default function App() {
                 <input
                   type="text"
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT_LENGTH))}
                   placeholder="Sujet de votre vidéo..."
+                  maxLength={MAX_INPUT_LENGTH}
                   className="w-full bg-transparent border-none px-4 py-4 text-lg focus:outline-none placeholder:text-white/20 font-medium"
                 />
               </div>
@@ -291,8 +356,21 @@ export default function App() {
               </button>
             </form>
             
+            {input.length > 0 && (
+              <div className={`mt-2 text-right text-[10px] font-mono ${input.length >= MAX_INPUT_LENGTH ? 'text-red-400' : 'text-white/20'}`}>
+                {input.length}/{MAX_INPUT_LENGTH}
+              </div>
+            )}
+
+            {error && (
+              <div className="mt-4 flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                {error}
+              </div>
+            )}
+
             {!displayResult && !loading && (
-              <button 
+              <button
                 onClick={() => setShowExample(true)}
                 className="mt-6 text-xs text-white/30 hover:text-white transition-colors flex items-center gap-2 mx-auto font-bold uppercase tracking-widest"
               >
@@ -389,6 +467,29 @@ export default function App() {
                   </div>
                   <div className="bg-red-500/[0.03] rounded-3xl p-8 italic text-white/70 whitespace-pre-wrap border border-red-500/10 leading-relaxed">
                     {displayResult.shortsScript}
+                  </div>
+                </div>
+
+                {/* Hooks */}
+                <div className="glass-card p-8">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="p-2 bg-yellow-500/10 rounded-lg">
+                      <Lightbulb className="w-5 h-5 text-yellow-500" />
+                    </div>
+                    <h3 className="text-xl font-black uppercase tracking-tight">Accroches Vidéo</h3>
+                  </div>
+                  <div className="space-y-4">
+                    {displayResult.hooks.map((hook, idx) => (
+                      <div key={idx} className="group flex items-center justify-between p-5 bg-yellow-500/[0.03] rounded-2xl border border-yellow-500/10 hover:border-yellow-500/30 transition-all">
+                        <span className="text-sm text-white/70 italic leading-relaxed">"{hook}"</span>
+                        <button
+                          onClick={() => copyToClipboard(hook, `hook-${idx}`)}
+                          className="p-3 hover:bg-white/10 rounded-xl transition-all text-white/20 hover:text-white shrink-0 ml-3"
+                        >
+                          {copiedField === `hook-${idx}` ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -502,7 +603,28 @@ export default function App() {
                   </div>
                 </div>
 
-                <button 
+                {/* CTA Variants */}
+                <div className="glass-card p-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <Megaphone className="w-5 h-5 text-pink-500" />
+                    <h3 className="font-black uppercase tracking-widest text-xs opacity-60">Appels à l'action</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {displayResult.ctaVariants.map((cta, idx) => (
+                      <div key={idx} className="group relative text-xs p-4 bg-pink-500/[0.03] rounded-xl text-white/50 border border-pink-500/10 hover:border-pink-500/30 transition-all leading-relaxed">
+                        {cta}
+                        <button
+                          onClick={() => copyToClipboard(cta, `cta-${idx}`)}
+                          className="absolute top-2 right-2 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          {copiedField === `cta-${idx}` ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
                   onClick={() => setInput('') || setResult(null) || setShowExample(false)}
                   className="btn-secondary w-full text-xs font-bold uppercase tracking-widest"
                 >
@@ -538,24 +660,93 @@ export default function App() {
             ))}
           </section>
         )}
+
+        {/* Blog Preview Section on Home */}
+        {!displayResult && !loading && (
+          <section className="mt-20">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-black tracking-tight">
+                Derniers articles du <span className="text-red-500">blog</span>
+              </h2>
+              <button
+                onClick={() => navigate('/blog')}
+                className="text-xs text-white/30 hover:text-white transition-colors flex items-center gap-2 font-bold uppercase tracking-widest"
+              >
+                Tous les articles
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {blogArticles.slice(0, 3).map((article) => (
+                <button
+                  key={article.slug}
+                  onClick={() => navigate(`/blog/${article.slug}`)}
+                  className="glass-card p-6 text-left group hover:bg-white/[0.05] transition-colors"
+                >
+                  <span className="text-[10px] text-red-400 font-bold uppercase tracking-widest">{article.category}</span>
+                  <h3 className="text-sm font-bold mt-2 mb-3 group-hover:text-red-400 transition-colors leading-tight">
+                    {article.title}
+                  </h3>
+                  <p className="text-xs text-white/30 leading-relaxed line-clamp-2">{article.excerpt}</p>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+        </div>
+        )}
       </main>
 
       {/* Footer */}
       <footer className="py-20 border-t border-white/5 bg-black/20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="bg-white/5 p-2 rounded-lg">
-              <Youtube className="w-5 h-5 text-red-500" />
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            <div>
+              <button onClick={() => navigate('/')} className="flex items-center gap-3 mb-4">
+                <div className="bg-white/5 p-2 rounded-lg">
+                  <Youtube className="w-5 h-5 text-red-500" />
+                </div>
+                <span className="text-xl font-black tracking-tighter">YT MetaGen AI</span>
+              </button>
+              <p className="text-sm text-white/30 leading-relaxed">
+                Générateur de métadonnées YouTube optimisées par intelligence artificielle. Titres, descriptions, tags et plus encore.
+              </p>
             </div>
-            <span className="text-xl font-black tracking-tighter">YT MetaGen AI</span>
+            <div>
+              <h4 className="font-black text-xs uppercase tracking-widest text-white/50 mb-4">Outil</h4>
+              <ul className="space-y-2">
+                <li>
+                  <button onClick={() => navigate('/')} className="text-sm text-white/30 hover:text-white transition-colors">
+                    Générateur de métadonnées
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate('/blog')} className="text-sm text-white/30 hover:text-white transition-colors">
+                    Blog YouTube SEO
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-black text-xs uppercase tracking-widest text-white/50 mb-4">Articles populaires</h4>
+              <ul className="space-y-2">
+                {blogArticles.slice(0, 4).map(a => (
+                  <li key={a.slug}>
+                    <button
+                      onClick={() => navigate(`/blog/${a.slug}`)}
+                      className="text-sm text-white/30 hover:text-white transition-colors text-left leading-tight"
+                    >
+                      {a.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <p className="text-white/20 text-[10px] uppercase tracking-[0.4em] mb-8">
-            © 2024 • L'outil ultime pour les créateurs
-          </p>
-          <div className="flex justify-center gap-6 text-white/30 text-xs font-bold uppercase tracking-widest">
-            <a href="#" className="hover:text-white transition-colors">Confidentialité</a>
-            <a href="#" className="hover:text-white transition-colors">Conditions</a>
-            <a href="#" className="hover:text-white transition-colors">Support</a>
+          <div className="border-t border-white/5 pt-8 text-center">
+            <p className="text-white/20 text-[10px] uppercase tracking-[0.4em]">
+              © 2025 • L'outil ultime pour les créateurs YouTube
+            </p>
           </div>
         </div>
       </footer>

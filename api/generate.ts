@@ -1,27 +1,9 @@
-import express from "express";
-import { createServer as createViteServer } from "vite";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { GoogleGenAI, Type } from "@google/genai";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const app = express();
-const PORT = 3000;
-
-app.use(express.json());
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
-app.post("/api/generate", async (req, res) => {
-  const { prompt, model: requestedModel } = req.body;
-  if (!prompt) {
-    return res.status(400).json({ error: "Prompt is required" });
-  }
-
-  const model = requestedModel || "gemini-3-flash-preview";
-
-  try {
-    const systemInstruction = `Tu es un expert en SEO YouTube et en marketing de contenu. 
+const systemInstruction = `Tu es un expert en SEO YouTube et en marketing de contenu.
 Ta mission est de générer des métadonnées complètes et optimisées pour une vidéo YouTube à partir d'un simple titre ou d'un sujet fourni par l'utilisateur.
 Réponds TOUJOURS en français.
 Génère :
@@ -37,6 +19,19 @@ Génère :
 10. 3 variantes de CTA (Call to Action).
 11. 10 mots-clés de "Longue Traîne" spécifiques.`;
 
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const { prompt, model: requestedModel } = req.body;
+  if (!prompt) {
+    return res.status(400).json({ error: "Prompt is required" });
+  }
+
+  const model = requestedModel || "gemini-3-flash-preview";
+
+  try {
     const response = await ai.models.generateContent({
       model,
       contents: [{ parts: [{ text: prompt }] }],
@@ -59,9 +54,9 @@ Génère :
             longTailKeywords: { type: Type.ARRAY, items: { type: Type.STRING } },
           },
           required: [
-            "titles", "description", "tags", "thumbnailIdeas", "hooks", 
-            "shortsScript", "communityPost", "pinnedComment", "targetAudience", 
-            "ctaVariants", "longTailKeywords"
+            "titles", "description", "tags", "thumbnailIdeas", "hooks",
+            "shortsScript", "communityPost", "pinnedComment", "targetAudience",
+            "ctaVariants", "longTailKeywords",
           ],
         },
       },
@@ -72,23 +67,4 @@ Génère :
     console.error("Generation error:", error);
     res.status(500).json({ error: "Erreur lors de la génération des métadonnées." });
   }
-});
-
-// Vite middleware for development
-if (process.env.NODE_ENV !== "production") {
-  const vite = await createViteServer({
-    server: { middlewareMode: true },
-    appType: "spa",
-  });
-  app.use(vite.middlewares);
-} else {
-  const path = await import("path");
-  app.use(express.static("dist"));
-  app.get("*", (_req, res) => {
-    res.sendFile(path.resolve("dist", "index.html"));
-  });
 }
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
