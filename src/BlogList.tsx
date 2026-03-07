@@ -20,7 +20,7 @@ export default function BlogList({ onNavigate }: BlogListProps) {
           <h1 className="text-4xl sm:text-6xl font-black mb-6 tracking-tighter leading-[0.9]">
             BLOG <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">YOUTUBE SEO</span>
           </h1>
-          <p className="text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-500 dark:text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
             Guides, astuces et stratégies pour optimiser vos vidéos YouTube et dominer l'algorithme.
           </p>
         </motion.div>
@@ -33,7 +33,7 @@ export default function BlogList({ onNavigate }: BlogListProps) {
         transition={{ delay: 0.2 }}
         className="glass-card p-8 mb-12 text-center"
       >
-        <p className="text-white/60 mb-4">Passez de la théorie à la pratique :</p>
+        <p className="text-gray-600 dark:text-white/60 mb-4">Passez de la théorie à la pratique :</p>
         <button
           onClick={() => onNavigate('/')}
           className="btn-primary inline-flex"
@@ -46,7 +46,7 @@ export default function BlogList({ onNavigate }: BlogListProps) {
       {/* Categories */}
       <div className="flex flex-wrap gap-3 justify-center mb-12">
         {categories.map(cat => (
-          <span key={cat} className="px-4 py-2 bg-white/5 text-white/50 rounded-full text-xs font-bold uppercase tracking-widest border border-white/10">
+          <span key={cat} className="px-4 py-2 bg-gray-100 text-gray-500 dark:bg-white/5 dark:text-white/50 rounded-full text-xs font-bold uppercase tracking-widest border border-gray-200 dark:border-white/10">
             <Tag className="w-3 h-3 inline mr-2" />
             {cat}
           </span>
@@ -69,21 +69,21 @@ function ArticleCard({ article, index, onNavigate }: { key?: string; article: Bl
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 * index }}
-      className="glass-card p-6 flex flex-col group hover:bg-white/[0.05] transition-colors cursor-pointer"
+      className="glass-card p-6 flex flex-col group hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer"
       onClick={() => onNavigate(`/blog/${article.slug}`)}
     >
       <div className="flex items-center gap-3 mb-4">
-        <span className="px-3 py-1 bg-red-500/10 text-red-400 rounded-full text-[10px] font-bold uppercase tracking-widest">
+        <span className="px-3 py-1 bg-red-500/10 text-red-500 dark:text-red-400 rounded-full text-[10px] font-bold uppercase tracking-widest">
           {article.category}
         </span>
       </div>
-      <h2 className="text-lg font-black tracking-tight mb-3 group-hover:text-red-400 transition-colors leading-tight">
+      <h2 className="text-lg font-black tracking-tight mb-3 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors leading-tight">
         {article.title}
       </h2>
-      <p className="text-sm text-white/40 leading-relaxed mb-6 flex-1">
+      <p className="text-sm text-gray-500 dark:text-white/40 leading-relaxed mb-6 flex-1">
         {article.excerpt}
       </p>
-      <div className="flex items-center justify-between text-[10px] text-white/30 uppercase tracking-widest">
+      <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-white/30 uppercase tracking-widest">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1">
             <Calendar className="w-3 h-3" />
@@ -94,7 +94,7 @@ function ArticleCard({ article, index, onNavigate }: { key?: string; article: Bl
             {article.readTime}
           </span>
         </div>
-        <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-red-400 group-hover:translate-x-1 transition-all" />
+        <ArrowRight className="w-4 h-4 text-gray-300 dark:text-white/20 group-hover:text-red-500 dark:group-hover:text-red-400 group-hover:translate-x-1 transition-all" />
       </div>
     </motion.article>
   );

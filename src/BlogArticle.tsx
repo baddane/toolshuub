@@ -27,7 +27,7 @@ export default function BlogArticle({ slug, onNavigate }: BlogArticleProps) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <h1 className="text-3xl font-black mb-4">Article introuvable</h1>
-        <p className="text-white/50 mb-8">Cet article n'existe pas ou a été déplacé.</p>
+        <p className="text-gray-500 dark:text-white/50 mb-8">Cet article n'existe pas ou a été déplacé.</p>
         <button onClick={() => onNavigate('/blog')} className="btn-primary inline-flex">
           Retour au blog
         </button>
@@ -45,25 +45,25 @@ export default function BlogArticle({ slug, onNavigate }: BlogArticleProps) {
       className="max-w-4xl mx-auto px-4 py-12"
     >
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-white/30 mb-8" aria-label="Fil d'Ariane">
-        <button onClick={() => onNavigate('/')} className="hover:text-white transition-colors">Accueil</button>
+      <nav className="flex items-center gap-2 text-xs text-gray-400 dark:text-white/30 mb-8" aria-label="Fil d'Ariane">
+        <button onClick={() => onNavigate('/')} className="hover:text-gray-900 dark:hover:text-white transition-colors">Accueil</button>
         <span>/</span>
-        <button onClick={() => onNavigate('/blog')} className="hover:text-white transition-colors">Blog</button>
+        <button onClick={() => onNavigate('/blog')} className="hover:text-gray-900 dark:hover:text-white transition-colors">Blog</button>
         <span>/</span>
-        <span className="text-white/50 truncate max-w-[200px]">{article.title}</span>
+        <span className="text-gray-500 dark:text-white/50 truncate max-w-[200px]">{article.title}</span>
       </nav>
 
       {/* Article Header */}
       <header className="mb-12">
         <div className="flex items-center gap-3 mb-6">
-          <span className="px-3 py-1 bg-red-500/10 text-red-400 rounded-full text-[10px] font-bold uppercase tracking-widest">
+          <span className="px-3 py-1 bg-red-500/10 text-red-500 dark:text-red-400 rounded-full text-[10px] font-bold uppercase tracking-widest">
             {article.category}
           </span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight mb-6">
           {article.title}
         </h1>
-        <div className="flex items-center gap-6 text-sm text-white/40">
+        <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-white/40">
           <span className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
             {new Date(article.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -77,7 +77,7 @@ export default function BlogArticle({ slug, onNavigate }: BlogArticleProps) {
 
       {/* CTA Banner */}
       <div className="glass-card p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-sm text-white/60">Mettez ces conseils en pratique avec notre outil IA :</p>
+        <p className="text-sm text-gray-600 dark:text-white/60">Mettez ces conseils en pratique avec notre outil IA :</p>
         <button onClick={() => onNavigate('/')} className="btn-primary text-sm whitespace-nowrap">
           Essayer YT MetaGen AI
           <ArrowRight className="w-4 h-4" />
@@ -93,20 +93,20 @@ export default function BlogArticle({ slug, onNavigate }: BlogArticleProps) {
 
       {/* Related Articles */}
       {related.length > 0 && (
-        <section className="border-t border-white/10 pt-12">
+        <section className="border-t border-gray-200 dark:border-white/10 pt-12">
           <h2 className="text-2xl font-black tracking-tight mb-8">Articles similaires</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {related.map(rel => (
               <button
                 key={rel.slug}
                 onClick={() => onNavigate(`/blog/${rel.slug}`)}
-                className="glass-card p-6 text-left group hover:bg-white/[0.05] transition-colors"
+                className="glass-card p-6 text-left group hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-colors"
               >
-                <span className="text-[10px] text-red-400 font-bold uppercase tracking-widest">{rel.category}</span>
-                <h3 className="text-sm font-bold mt-2 mb-3 group-hover:text-red-400 transition-colors leading-tight">
+                <span className="text-[10px] text-red-500 dark:text-red-400 font-bold uppercase tracking-widest">{rel.category}</span>
+                <h3 className="text-sm font-bold mt-2 mb-3 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors leading-tight">
                   {rel.title}
                 </h3>
-                <span className="flex items-center gap-1 text-[10px] text-white/30">
+                <span className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-white/30">
                   <Clock className="w-3 h-3" />
                   {rel.readTime}
                 </span>
@@ -120,7 +120,7 @@ export default function BlogArticle({ slug, onNavigate }: BlogArticleProps) {
       <div className="mt-12 text-center">
         <div className="glass-card p-10">
           <h2 className="text-2xl font-black tracking-tight mb-4">Prêt à optimiser vos vidéos ?</h2>
-          <p className="text-white/50 mb-6 max-w-lg mx-auto">
+          <p className="text-gray-500 dark:text-white/50 mb-6 max-w-lg mx-auto">
             Générez des titres, descriptions, tags et bien plus encore en quelques secondes grâce à l'IA.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -150,7 +150,7 @@ function parseMarkdown(content: string): React.ReactElement[] {
     if (currentParagraph.length > 0) {
       const text = currentParagraph.join(' ');
       elements.push(
-        <p key={elements.length} className="text-white/60 leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: formatInline(text) }} />
+        <p key={elements.length} className="text-gray-600 dark:text-white/60 leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: formatInline(text) }} />
       );
       currentParagraph = [];
     }
@@ -161,7 +161,7 @@ function parseMarkdown(content: string): React.ReactElement[] {
       elements.push(
         <ul key={elements.length} className="space-y-2 mb-6 ml-4">
           {listItems.map((item, i) => (
-            <li key={i} className="text-white/60 leading-relaxed flex items-start gap-2">
+            <li key={i} className="text-gray-600 dark:text-white/60 leading-relaxed flex items-start gap-2">
               <span className="text-red-500 mt-1.5 shrink-0">&#8226;</span>
               <span dangerouslySetInnerHTML={{ __html: formatInline(item) }} />
             </li>
@@ -186,7 +186,7 @@ function parseMarkdown(content: string): React.ReactElement[] {
       flushParagraph();
       flushList();
       elements.push(
-        <h3 key={elements.length} className="text-lg font-black tracking-tight mt-8 mb-4 text-white/90">
+        <h3 key={elements.length} className="text-lg font-black tracking-tight mt-8 mb-4 text-gray-800 dark:text-white/90">
           {trimmed.slice(4)}
         </h3>
       );
@@ -194,7 +194,7 @@ function parseMarkdown(content: string): React.ReactElement[] {
       flushParagraph();
       flushList();
       elements.push(
-        <h2 key={elements.length} className="text-2xl font-black tracking-tight mt-10 mb-6 text-white">
+        <h2 key={elements.length} className="text-2xl font-black tracking-tight mt-10 mb-6">
           {trimmed.slice(3)}
         </h2>
       );
@@ -216,7 +216,7 @@ function parseMarkdown(content: string): React.ReactElement[] {
 
 function formatInline(text: string): string {
   return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 dark:text-white font-semibold">$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`(.+?)`/g, '<code class="bg-white/10 px-1.5 py-0.5 rounded text-red-400 text-xs font-mono">$1</code>');
+    .replace(/`(.+?)`/g, '<code class="bg-gray-100 dark:bg-white/10 px-1.5 py-0.5 rounded text-red-500 dark:text-red-400 text-xs font-mono">$1</code>');
 }

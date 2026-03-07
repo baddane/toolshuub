@@ -23,7 +23,9 @@ import {
   Lightbulb,
   Megaphone,
   AlertCircle,
-  BookOpen
+  BookOpen,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateYouTubeMetadata, YouTubeMetadata } from './services/geminiService';
@@ -82,6 +84,23 @@ function persistHistory(data: YouTubeMetadata[]) {
   }
 }
 
+function useTheme() {
+  const [dark, setDark] = useState(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved === 'dark';
+    } catch {}
+    return true; // dark by default
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', dark);
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch {}
+  }, [dark]);
+
+  return { dark, toggle: () => setDark(d => !d) };
+}
+
 function useRouter() {
   const [path, setPath] = useState(window.location.pathname);
 
@@ -102,6 +121,7 @@ function useRouter() {
 
 export default function App() {
   const { path, navigate } = useRouter();
+  const { dark, toggle: toggleTheme } = useTheme();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState('gemini-3-flash-preview');
@@ -157,9 +177,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white font-sans selection:bg-red-500/30">
+    <div className="min-h-screen font-sans selection:bg-red-500/30">
       {/* Header */}
-      <header className="border-b border-white/10 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-gray-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50 dark:border-white/10 dark:bg-black/40">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
           <button onClick={() => navigate('/')} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="bg-red-600 p-2 rounded-xl shadow-lg shadow-red-600/20">
@@ -167,27 +187,38 @@ export default function App() {
             </div>
             <div className="text-left">
               <span className="text-xl font-black tracking-tighter leading-none block">YT MetaGen <span className="text-red-500">AI</span></span>
-              <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Powered by Gemini</span>
+              <span className="text-[10px] font-mono text-gray-400 dark:text-white/30 uppercase tracking-widest">Powered by Gemini</span>
             </div>
           </button>
           <nav className="flex items-center gap-2">
             <button
               onClick={() => navigate('/blog')}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
-                path.startsWith('/blog') ? 'bg-red-500/10 text-red-400' : 'text-white/50 hover:text-white hover:bg-white/5'
+                path.startsWith('/blog') ? 'bg-red-500/10 text-red-500 dark:text-red-400' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:text-white dark:hover:bg-white/5'
               }`}
             >
               <BookOpen className="w-4 h-4" />
               Blog
             </button>
             <button
+              onClick={toggleTheme}
+              className="p-3 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-all group"
+              title={dark ? 'Mode clair' : 'Mode sombre'}
+            >
+              {dark ? (
+                <Sun className="w-5 h-5 text-yellow-500 group-hover:text-yellow-400 transition-colors" />
+              ) : (
+                <Moon className="w-5 h-5 text-gray-500 group-hover:text-gray-900 transition-colors" />
+              )}
+            </button>
+            <button
               onClick={() => setShowHistory(!showHistory)}
-              className="p-3 hover:bg-white/5 rounded-xl transition-all relative group"
+              className="p-3 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-all relative group"
               title="Historique"
             >
-              <History className="w-5 h-5 text-white/60 group-hover:text-white transition-colors" />
+              <History className="w-5 h-5 text-gray-500 group-hover:text-gray-900 dark:text-white/60 dark:group-hover:text-white transition-colors" />
               {history.length > 0 && (
-                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-black"></span>
+                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-black"></span>
               )}
             </button>
           </nav>
@@ -211,14 +242,14 @@ export default function App() {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed top-0 right-0 h-full w-full max-w-md bg-brand-surface border-l border-white/10 z-[70] p-8 shadow-2xl flex flex-col"
+                className="fixed top-0 right-0 h-full w-full max-w-md bg-white border-l border-gray-200 dark:bg-brand-surface dark:border-white/10 z-[70] p-8 shadow-2xl flex flex-col"
               >
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-3">
                     <History className="w-6 h-6 text-red-500" />
                     <h2 className="text-2xl font-black tracking-tight">Historique</h2>
                   </div>
-                  <button onClick={() => setShowHistory(false)} className="p-2 hover:bg-white/5 rounded-lg transition-colors">
+                  <button onClick={() => setShowHistory(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
                     <Check className="w-5 h-5 rotate-45" />
                   </button>
                 </div>
@@ -238,15 +269,15 @@ export default function App() {
                           setShowExample(false);
                           setShowHistory(false);
                         }}
-                        className="w-full text-left p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all group"
+                        className="w-full text-left p-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/5 rounded-2xl transition-all group"
                       >
                         <div className="flex justify-between items-start gap-4">
-                          <p className="font-medium text-sm line-clamp-2 group-hover:text-red-400 transition-colors">
+                          <p className="font-medium text-sm line-clamp-2 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors">
                             {item.titles[0]}
                           </p>
-                          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white/60 shrink-0 mt-1" />
+                          <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 dark:text-white/20 dark:group-hover:text-white/60 shrink-0 mt-1" />
                         </div>
-                        <div className="mt-2 flex items-center gap-2 text-[10px] text-white/30 uppercase tracking-widest">
+                        <div className="mt-2 flex items-center gap-2 text-[10px] text-gray-400 dark:text-white/30 uppercase tracking-widest">
                           <Hash className="w-3 h-3" />
                           {item.tags.length} tags
                         </div>
@@ -292,7 +323,7 @@ export default function App() {
               DOMINEZ <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">L'ALGORITHME.</span>
             </h2>
-            <p className="text-white/50 text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
+            <p className="text-gray-500 dark:text-white/50 text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
               Générez instantanément des titres, descriptions et tags optimisés pour propulser vos vidéos au sommet.
             </p>
 
@@ -307,15 +338,15 @@ export default function App() {
                   key={m.id}
                   onClick={() => setSelectedModel(m.id)}
                   className={`flex flex-col items-center p-4 rounded-2xl border transition-all min-w-[120px] ${
-                    selectedModel === m.id 
-                      ? 'bg-red-500/10 border-red-500 shadow-lg shadow-red-500/10' 
-                      : 'bg-white/5 border-white/10 hover:border-white/20'
+                    selectedModel === m.id
+                      ? 'bg-red-500/10 border-red-500 shadow-lg shadow-red-500/10'
+                      : 'bg-gray-100 border-gray-200 hover:border-gray-300 dark:bg-white/5 dark:border-white/10 dark:hover:border-white/20'
                   }`}
                 >
-                  <div className={`p-2 rounded-lg mb-2 ${selectedModel === m.id ? 'bg-red-500 text-white' : 'bg-white/5 text-white/40'}`}>
+                  <div className={`p-2 rounded-lg mb-2 ${selectedModel === m.id ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-400 dark:bg-white/5 dark:text-white/40'}`}>
                     {m.icon}
                   </div>
-                  <span className={`text-sm font-bold ${selectedModel === m.id ? 'text-white' : 'text-white/60'}`}>{m.name}</span>
+                  <span className={`text-sm font-bold ${selectedModel === m.id ? 'text-red-600 dark:text-white' : 'text-gray-500 dark:text-white/60'}`}>{m.name}</span>
                   <span className="text-[10px] uppercase tracking-widest opacity-30 mt-1">{m.desc}</span>
                 </button>
               ))}
@@ -328,16 +359,16 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <form onSubmit={handleGenerate} className="relative flex flex-col sm:flex-row gap-3 bg-white/5 p-3 rounded-3xl border border-white/10 focus-within:ring-4 focus-within:ring-red-500/10 transition-all backdrop-blur-md">
+            <form onSubmit={handleGenerate} className="relative flex flex-col sm:flex-row gap-3 bg-gray-100 dark:bg-white/5 p-3 rounded-3xl border border-gray-200 dark:border-white/10 focus-within:ring-4 focus-within:ring-red-500/10 transition-all backdrop-blur-md">
               <div className="flex-1 flex items-center px-4">
-                <Search className="w-5 h-5 text-white/20" />
+                <Search className="w-5 h-5 text-gray-300 dark:text-white/20" />
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT_LENGTH))}
                   placeholder="Sujet de votre vidéo..."
                   maxLength={MAX_INPUT_LENGTH}
-                  className="w-full bg-transparent border-none px-4 py-4 text-lg focus:outline-none placeholder:text-white/20 font-medium"
+                  className="w-full bg-transparent border-none px-4 py-4 text-lg focus:outline-none placeholder:text-gray-400 dark:placeholder:text-white/20 font-medium"
                 />
               </div>
               <button
@@ -357,7 +388,7 @@ export default function App() {
             </form>
             
             {input.length > 0 && (
-              <div className={`mt-2 text-right text-[10px] font-mono ${input.length >= MAX_INPUT_LENGTH ? 'text-red-400' : 'text-white/20'}`}>
+              <div className={`mt-2 text-right text-[10px] font-mono ${input.length >= MAX_INPUT_LENGTH ? 'text-red-400' : 'text-gray-400 dark:text-white/20'}`}>
                 {input.length}/{MAX_INPUT_LENGTH}
               </div>
             )}
@@ -372,7 +403,7 @@ export default function App() {
             {!displayResult && !loading && (
               <button
                 onClick={() => setShowExample(true)}
-                className="mt-6 text-xs text-white/30 hover:text-white transition-colors flex items-center gap-2 mx-auto font-bold uppercase tracking-widest"
+                className="mt-6 text-xs text-gray-400 hover:text-gray-900 dark:text-white/30 dark:hover:text-white transition-colors flex items-center gap-2 mx-auto font-bold uppercase tracking-widest"
               >
                 <RefreshCw className="w-3 h-3" />
                 Voir un exemple
@@ -413,11 +444,11 @@ export default function App() {
                   </div>
                   <div className="space-y-4">
                     {displayResult.titles.map((title, idx) => (
-                      <div key={idx} className="group flex items-center justify-between p-5 bg-white/[0.03] rounded-2xl border border-white/5 hover:border-red-500/30 hover:bg-red-500/[0.02] transition-all">
+                      <div key={idx} className="group flex items-center justify-between p-5 bg-gray-50 dark:bg-white/[0.03] rounded-2xl border border-gray-200 dark:border-white/5 hover:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/[0.02] transition-all">
                         <span className="text-lg font-semibold leading-tight">{title}</span>
-                        <button 
+                        <button
                           onClick={() => copyToClipboard(title, `title-${idx}`)}
-                          className="p-3 hover:bg-white/10 rounded-xl transition-all text-white/20 hover:text-white"
+                          className="p-3 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition-all text-gray-300 hover:text-gray-700 dark:text-white/20 dark:hover:text-white"
                         >
                           {copiedField === `title-${idx}` ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
                         </button>
@@ -443,7 +474,7 @@ export default function App() {
                       Copier tout
                     </button>
                   </div>
-                  <div className="bg-black/40 rounded-3xl p-8 font-mono text-sm leading-relaxed text-white/70 whitespace-pre-wrap border border-white/5 relative group">
+                  <div className="bg-gray-50 dark:bg-black/40 rounded-3xl p-8 font-mono text-sm leading-relaxed text-gray-600 dark:text-white/70 whitespace-pre-wrap border border-gray-200 dark:border-white/5 relative group">
                     {displayResult.description}
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 pointer-events-none rounded-3xl" />
                   </div>
@@ -460,12 +491,12 @@ export default function App() {
                     </div>
                     <button 
                       onClick={() => copyToClipboard(displayResult.shortsScript, 'shorts')}
-                      className="p-3 hover:bg-white/10 rounded-xl transition-all text-white/20 hover:text-white"
+                      className="p-3 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition-all text-gray-300 hover:text-gray-700 dark:text-white/20 dark:hover:text-white"
                     >
                       {copiedField === 'shorts' ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
                     </button>
                   </div>
-                  <div className="bg-red-500/[0.03] rounded-3xl p-8 italic text-white/70 whitespace-pre-wrap border border-red-500/10 leading-relaxed">
+                  <div className="bg-red-50 dark:bg-red-500/[0.03] rounded-3xl p-8 italic text-gray-600 dark:text-white/70 whitespace-pre-wrap border border-red-200 dark:border-red-500/10 leading-relaxed">
                     {displayResult.shortsScript}
                   </div>
                 </div>
@@ -480,11 +511,11 @@ export default function App() {
                   </div>
                   <div className="space-y-4">
                     {displayResult.hooks.map((hook, idx) => (
-                      <div key={idx} className="group flex items-center justify-between p-5 bg-yellow-500/[0.03] rounded-2xl border border-yellow-500/10 hover:border-yellow-500/30 transition-all">
-                        <span className="text-sm text-white/70 italic leading-relaxed">"{hook}"</span>
+                      <div key={idx} className="group flex items-center justify-between p-5 bg-yellow-50 dark:bg-yellow-500/[0.03] rounded-2xl border border-yellow-200 dark:border-yellow-500/10 hover:border-yellow-500/30 transition-all">
+                        <span className="text-sm text-gray-600 dark:text-white/70 italic leading-relaxed">"{hook}"</span>
                         <button
                           onClick={() => copyToClipboard(hook, `hook-${idx}`)}
-                          className="p-3 hover:bg-white/10 rounded-xl transition-all text-white/20 hover:text-white shrink-0 ml-3"
+                          className="p-3 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition-all text-gray-300 hover:text-gray-700 dark:text-white/20 dark:hover:text-white shrink-0 ml-3"
                         >
                           {copiedField === `hook-${idx}` ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                         </button>
@@ -500,9 +531,9 @@ export default function App() {
                 <div className="glass-card p-8">
                   <div className="flex items-center gap-3 mb-6">
                     <Users className="w-5 h-5 text-emerald-500" />
-                    <h3 className="font-black uppercase tracking-widest text-xs opacity-60">Audience Cible</h3>
+                    <h3 className="font-black uppercase tracking-widest text-xs text-gray-500 dark:text-white/60">Audience Cible</h3>
                   </div>
-                  <p className="text-sm text-white/60 leading-relaxed font-medium">{displayResult.targetAudience}</p>
+                  <p className="text-sm text-gray-600 dark:text-white/60 leading-relaxed font-medium">{displayResult.targetAudience}</p>
                 </div>
 
                 {/* Community Post */}
@@ -510,16 +541,16 @@ export default function App() {
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                       <Share2 className="w-5 h-5 text-blue-500" />
-                      <h3 className="font-black uppercase tracking-widest text-xs opacity-60">Post Communauté</h3>
+                      <h3 className="font-black uppercase tracking-widest text-xs text-gray-500 dark:text-white/60">Post Communauté</h3>
                     </div>
                     <button 
                       onClick={() => copyToClipboard(displayResult.communityPost, 'community')}
-                      className="p-2 hover:bg-white/10 rounded-xl transition-all text-white/20 hover:text-white"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition-all text-gray-300 hover:text-gray-700 dark:text-white/20 dark:hover:text-white"
                     >
                       {copiedField === 'community' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                     </button>
                   </div>
-                  <p className="text-sm text-white/60 italic bg-black/20 p-6 rounded-2xl border border-white/5 leading-relaxed">{displayResult.communityPost}</p>
+                  <p className="text-sm text-gray-600 dark:text-white/60 italic bg-gray-50 dark:bg-black/20 p-6 rounded-2xl border border-gray-200 dark:border-white/5 leading-relaxed">{displayResult.communityPost}</p>
                 </div>
 
                 {/* Pinned Comment */}
@@ -527,27 +558,27 @@ export default function App() {
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                       <MessageSquare className="w-5 h-5 text-orange-500" />
-                      <h3 className="font-black uppercase tracking-widest text-xs opacity-60">Commentaire Épinglé</h3>
+                      <h3 className="font-black uppercase tracking-widest text-xs text-gray-500 dark:text-white/60">Commentaire Épinglé</h3>
                     </div>
                     <button 
                       onClick={() => copyToClipboard(displayResult.pinnedComment, 'pinned')}
-                      className="p-2 hover:bg-white/10 rounded-xl transition-all text-white/20 hover:text-white"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition-all text-gray-300 hover:text-gray-700 dark:text-white/20 dark:hover:text-white"
                     >
                       {copiedField === 'pinned' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                     </button>
                   </div>
-                  <p className="text-sm text-white/60 font-medium bg-orange-500/[0.03] p-6 rounded-2xl border border-orange-500/10 leading-relaxed">{displayResult.pinnedComment}</p>
+                  <p className="text-sm text-gray-600 dark:text-white/60 font-medium bg-orange-50 dark:bg-orange-500/[0.03] p-6 rounded-2xl border border-orange-200 dark:border-orange-500/10 leading-relaxed">{displayResult.pinnedComment}</p>
                 </div>
 
                 {/* Thumbnail Ideas */}
                 <div className="glass-card p-8">
                   <div className="flex items-center gap-3 mb-6">
                     <ImageIcon className="w-5 h-5 text-purple-500" />
-                    <h3 className="font-black uppercase tracking-widest text-xs opacity-60">Idées Miniatures</h3>
+                    <h3 className="font-black uppercase tracking-widest text-xs text-gray-500 dark:text-white/60">Idées Miniatures</h3>
                   </div>
                   <div className="space-y-3">
                     {displayResult.thumbnailIdeas.map((idea, idx) => (
-                      <div key={idx} className="group relative text-xs p-4 bg-white/[0.03] rounded-xl text-white/50 border border-white/5 hover:border-purple-500/30 transition-all leading-relaxed">
+                      <div key={idx} className="group relative text-xs p-4 bg-gray-50 dark:bg-white/[0.03] rounded-xl text-gray-500 dark:text-white/50 border border-gray-200 dark:border-white/5 hover:border-purple-500/30 transition-all leading-relaxed">
                         {idea}
                         <button 
                           onClick={() => copyToClipboard(idea, `thumb-${idx}`)}
@@ -564,14 +595,14 @@ export default function App() {
                 <div className="glass-card p-8">
                   <div className="flex items-center gap-3 mb-6">
                     <Search className="w-5 h-5 text-blue-400" />
-                    <h3 className="font-black uppercase tracking-widest text-xs opacity-60">Longue Traîne</h3>
+                    <h3 className="font-black uppercase tracking-widest text-xs text-gray-500 dark:text-white/60">Longue Traîne</h3>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {displayResult.longTailKeywords.map((kw, idx) => (
                       <button 
                         key={idx} 
                         onClick={() => copyToClipboard(kw, `kw-${idx}`)}
-                        className="px-3 py-1.5 bg-blue-400/5 text-blue-300 rounded-xl text-[10px] border border-blue-400/10 hover:bg-blue-400/10 transition-all flex items-center gap-2"
+                        className="px-3 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-400/5 dark:text-blue-300 rounded-xl text-[10px] border border-blue-200 dark:border-blue-400/10 hover:bg-blue-100 dark:hover:bg-blue-400/10 transition-all flex items-center gap-2"
                       >
                         {kw}
                         {copiedField === `kw-${idx}` ? <Check className="w-2 h-2" /> : <Copy className="w-2 h-2 opacity-30" />}
@@ -585,18 +616,18 @@ export default function App() {
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                       <Hash className="w-5 h-5 text-blue-500" />
-                      <h3 className="font-black uppercase tracking-widest text-xs opacity-60">Tags SEO</h3>
+                      <h3 className="font-black uppercase tracking-widest text-xs text-gray-500 dark:text-white/60">Tags SEO</h3>
                     </div>
                     <button 
                       onClick={() => copyToClipboard(displayResult.tags.join(', '), 'tags')}
-                      className="p-2 hover:bg-white/10 rounded-xl transition-all text-white/20 hover:text-white"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition-all text-gray-300 hover:text-gray-700 dark:text-white/20 dark:hover:text-white"
                     >
                       {copiedField === 'tags' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {displayResult.tags.map((tag, idx) => (
-                      <span key={idx} className="px-4 py-2 bg-blue-500/5 text-blue-400 rounded-full text-[10px] font-bold border border-blue-500/10">
+                      <span key={idx} className="px-4 py-2 bg-blue-50 text-blue-600 dark:bg-blue-500/5 dark:text-blue-400 rounded-full text-[10px] font-bold border border-blue-200 dark:border-blue-500/10">
                         {tag}
                       </span>
                     ))}
@@ -607,11 +638,11 @@ export default function App() {
                 <div className="glass-card p-8">
                   <div className="flex items-center gap-3 mb-6">
                     <Megaphone className="w-5 h-5 text-pink-500" />
-                    <h3 className="font-black uppercase tracking-widest text-xs opacity-60">Appels à l'action</h3>
+                    <h3 className="font-black uppercase tracking-widest text-xs text-gray-500 dark:text-white/60">Appels à l'action</h3>
                   </div>
                   <div className="space-y-3">
                     {displayResult.ctaVariants.map((cta, idx) => (
-                      <div key={idx} className="group relative text-xs p-4 bg-pink-500/[0.03] rounded-xl text-white/50 border border-pink-500/10 hover:border-pink-500/30 transition-all leading-relaxed">
+                      <div key={idx} className="group relative text-xs p-4 bg-pink-50 dark:bg-pink-500/[0.03] rounded-xl text-gray-500 dark:text-white/50 border border-pink-200 dark:border-pink-500/10 hover:border-pink-500/30 transition-all leading-relaxed">
                         {cta}
                         <button
                           onClick={() => copyToClipboard(cta, `cta-${idx}`)}
@@ -649,13 +680,13 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + (i * 0.1) }}
-                className="glass-card p-8 hover:bg-white/[0.05] transition-colors group"
+                className="glass-card p-8 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-colors group"
               >
-                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-gray-100 dark:bg-white/5 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   {feature.icon}
                 </div>
                 <h4 className="text-lg font-black mb-3 tracking-tight">{feature.title}</h4>
-                <p className="text-sm text-white/40 leading-relaxed">{feature.desc}</p>
+                <p className="text-sm text-gray-500 dark:text-white/40 leading-relaxed">{feature.desc}</p>
               </motion.div>
             ))}
           </section>
@@ -670,7 +701,7 @@ export default function App() {
               </h2>
               <button
                 onClick={() => navigate('/blog')}
-                className="text-xs text-white/30 hover:text-white transition-colors flex items-center gap-2 font-bold uppercase tracking-widest"
+                className="text-xs text-gray-400 hover:text-gray-900 dark:text-white/30 dark:hover:text-white transition-colors flex items-center gap-2 font-bold uppercase tracking-widest"
               >
                 Tous les articles
                 <ChevronRight className="w-4 h-4" />
@@ -681,13 +712,13 @@ export default function App() {
                 <button
                   key={article.slug}
                   onClick={() => navigate(`/blog/${article.slug}`)}
-                  className="glass-card p-6 text-left group hover:bg-white/[0.05] transition-colors"
+                  className="glass-card p-6 text-left group hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-colors"
                 >
-                  <span className="text-[10px] text-red-400 font-bold uppercase tracking-widest">{article.category}</span>
-                  <h3 className="text-sm font-bold mt-2 mb-3 group-hover:text-red-400 transition-colors leading-tight">
+                  <span className="text-[10px] text-red-500 dark:text-red-400 font-bold uppercase tracking-widest">{article.category}</span>
+                  <h3 className="text-sm font-bold mt-2 mb-3 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors leading-tight">
                     {article.title}
                   </h3>
-                  <p className="text-xs text-white/30 leading-relaxed line-clamp-2">{article.excerpt}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/30 leading-relaxed line-clamp-2">{article.excerpt}</p>
                 </button>
               ))}
             </div>
@@ -698,43 +729,43 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="py-20 border-t border-white/5 bg-black/20">
+      <footer className="py-20 border-t border-gray-200 bg-gray-50 dark:border-white/5 dark:bg-black/20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
             <div>
               <button onClick={() => navigate('/')} className="flex items-center gap-3 mb-4">
-                <div className="bg-white/5 p-2 rounded-lg">
+                <div className="bg-gray-100 dark:bg-white/5 p-2 rounded-lg">
                   <Youtube className="w-5 h-5 text-red-500" />
                 </div>
                 <span className="text-xl font-black tracking-tighter">YT MetaGen AI</span>
               </button>
-              <p className="text-sm text-white/30 leading-relaxed">
+              <p className="text-sm text-gray-500 dark:text-white/30 leading-relaxed">
                 Générateur de métadonnées YouTube optimisées par intelligence artificielle. Titres, descriptions, tags et plus encore.
               </p>
             </div>
             <div>
-              <h4 className="font-black text-xs uppercase tracking-widest text-white/50 mb-4">Outil</h4>
+              <h4 className="font-black text-xs uppercase tracking-widest text-gray-400 dark:text-white/50 mb-4">Outil</h4>
               <ul className="space-y-2">
                 <li>
-                  <button onClick={() => navigate('/')} className="text-sm text-white/30 hover:text-white transition-colors">
+                  <button onClick={() => navigate('/')} className="text-sm text-gray-500 hover:text-gray-900 dark:text-white/30 dark:hover:text-white transition-colors">
                     Générateur de métadonnées
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigate('/blog')} className="text-sm text-white/30 hover:text-white transition-colors">
+                  <button onClick={() => navigate('/blog')} className="text-sm text-gray-500 hover:text-gray-900 dark:text-white/30 dark:hover:text-white transition-colors">
                     Blog YouTube SEO
                   </button>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-black text-xs uppercase tracking-widest text-white/50 mb-4">Articles populaires</h4>
+              <h4 className="font-black text-xs uppercase tracking-widest text-gray-400 dark:text-white/50 mb-4">Articles populaires</h4>
               <ul className="space-y-2">
                 {blogArticles.slice(0, 4).map(a => (
                   <li key={a.slug}>
                     <button
                       onClick={() => navigate(`/blog/${a.slug}`)}
-                      className="text-sm text-white/30 hover:text-white transition-colors text-left leading-tight"
+                      className="text-sm text-gray-500 hover:text-gray-900 dark:text-white/30 dark:hover:text-white transition-colors text-left leading-tight"
                     >
                       {a.title}
                     </button>
@@ -743,8 +774,8 @@ export default function App() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-white/5 pt-8 text-center">
-            <p className="text-white/20 text-[10px] uppercase tracking-[0.4em]">
+          <div className="border-t border-gray-200 dark:border-white/5 pt-8 text-center">
+            <p className="text-gray-400 dark:text-white/20 text-[10px] uppercase tracking-[0.4em]">
               © 2025 • L'outil ultime pour les créateurs YouTube
             </p>
           </div>
