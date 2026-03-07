@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ytmetagen.ai/sitemap.xml
+Sitemap: https://www.toolshuub.com/sitemap.xml
