@@ -25,10 +25,13 @@ import {
   AlertCircle,
   BookOpen,
   Sun,
-  Moon
+  Moon,
+  Key,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { generateYouTubeMetadata, YouTubeMetadata } from './services/geminiService';
+import { generateYouTubeMetadata, YouTubeMetadata, loadApiKey, saveApiKey } from './services/geminiService';
 import BlogList from './BlogList';
 import BlogArticlePage from './BlogArticle';
 import { blogArticles } from './blogData';
@@ -131,6 +134,8 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<YouTubeMetadata[]>(loadHistory);
   const [showHistory, setShowHistory] = useState(false);
+  const [apiKey, setApiKey] = useState(loadApiKey);
+  const [showApiKey, setShowApiKey] = useState(false);
 
   const saveToHistory = (data: YouTubeMetadata) => {
     // Avoid duplicates based on all titles
@@ -157,7 +162,7 @@ export default function App() {
     setError(null);
     setLoading(true);
     try {
-      const data = await generateYouTubeMetadata(trimmed, selectedModel);
+      const data = await generateYouTubeMetadata(trimmed, selectedModel, apiKey);
       setResult(data);
       saveToHistory(data);
     } catch (err) {
@@ -326,6 +331,38 @@ export default function App() {
             <p className="text-gray-500 dark:text-white/50 text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
               Générez instantanément des titres, descriptions et tags optimisés pour propulser vos vidéos au sommet.
             </p>
+
+            {/* API Key Input */}
+            <div className="max-w-lg mx-auto mb-8">
+              <div className="flex items-center gap-3 bg-gray-100 dark:bg-white/5 p-2 rounded-2xl border border-gray-200 dark:border-white/10">
+                <Key className="w-4 h-4 text-gray-400 dark:text-white/30 ml-3 shrink-0" />
+                <input
+                  type={showApiKey ? 'text' : 'password'}
+                  value={apiKey}
+                  onChange={(e) => {
+                    setApiKey(e.target.value);
+                    saveApiKey(e.target.value);
+                  }}
+                  placeholder="Entrez votre clé API Gemini..."
+                  className="w-full bg-transparent border-none py-2 text-sm focus:outline-none placeholder:text-gray-400 dark:placeholder:text-white/20 font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowApiKey(!showApiKey)}
+                  className="p-2 hover:bg-gray-200 dark:hover:bg-white/10 rounded-xl transition-all text-gray-400 dark:text-white/30 shrink-0"
+                >
+                  {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              {!apiKey && (
+                <p className="mt-2 text-xs text-gray-400 dark:text-white/30 text-center">
+                  Obtenez une clé gratuite sur{' '}
+                  <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-red-500 hover:underline">
+                    Google AI Studio
+                  </a>
+                </p>
+              )}
+            </div>
 
             {/* Model Selector */}
             <div className="flex justify-center gap-4 mb-8">
