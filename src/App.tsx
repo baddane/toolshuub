@@ -354,14 +354,11 @@ export default function App() {
                   {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-              {!apiKey && (
-                <p className="mt-2 text-xs text-gray-400 dark:text-white/30 text-center">
-                  Obtenez une clé gratuite sur{' '}
-                  <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-red-500 hover:underline">
-                    Google AI Studio
-                  </a>
-                </p>
-              )}
+              <p className="mt-2 text-xs text-gray-400 dark:text-white/30 text-center">
+                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-red-500 hover:underline">
+                  Comment obtenir une clé API Gemini gratuitement ?
+                </a>
+              </p>
             </div>
 
             {/* Model Selector */}
