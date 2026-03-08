@@ -50,7 +50,7 @@ YouTube permet de modifier vos titres après publication. Si une vidéo ne perfo
 
 ## Utiliser l'IA pour générer des titres
 
-Notre outil YT MetaGen AI génère automatiquement 5 variantes de titres optimisés SEO pour chaque sujet. C'est un excellent point de départ pour trouver l'angle parfait et gagner du temps dans votre processus créatif.
+Notre outil ToolsHuub génère automatiquement 5 variantes de titres optimisés SEO pour chaque sujet. C'est un excellent point de départ pour trouver l'angle parfait et gagner du temps dans votre processus créatif.
 
 ## Erreurs courantes à éviter
 
@@ -107,7 +107,7 @@ YouTube permet d'ajouter des hashtags dans la description. Les 3 premiers appara
 
 ## Automatisez votre workflow
 
-Avec YT MetaGen AI, vous pouvez générer des descriptions structurées avec chapitres, CTA et mots-clés optimisés en quelques secondes. Cela vous libère du temps pour ce qui compte vraiment : créer du contenu de qualité.`
+Avec ToolsHuub, vous pouvez générer des descriptions structurées avec chapitres, CTA et mots-clés optimisés en quelques secondes. Cela vous libère du temps pour ce qui compte vraiment : créer du contenu de qualité.`
   },
   {
     slug: "tags-youtube-guide-complet",
@@ -157,7 +157,7 @@ YouTube permet jusqu'à 500 caractères de tags. Visez entre 15 et 20 tags perti
 
 ## Générer des tags avec l'IA
 
-YT MetaGen AI analyse votre sujet et génère automatiquement 15 à 20 tags pertinents, incluant des mots-clés de longue traîne. Un gain de temps considérable par rapport à la recherche manuelle.`
+ToolsHuub analyse votre sujet et génère automatiquement 15 à 20 tags pertinents, incluant des mots-clés de longue traîne. Un gain de temps considérable par rapport à la recherche manuelle.`
   },
   {
     slug: "algorithme-youtube-2025",
@@ -206,7 +206,7 @@ YouTube mesure la satisfaction via les likes, les partages, les commentaires et 
 
 ## Comment adapter votre stratégie
 
-1. **Optimisez vos métadonnées** avec des outils comme YT MetaGen AI pour maximiser la pertinence
+1. **Optimisez vos métadonnées** avec des outils comme ToolsHuub pour maximiser la pertinence
 2. **Soignez vos miniatures** pour améliorer votre CTR
 3. **Travaillez votre rétention** avec un bon storytelling et des hooks efficaces
 4. **Publiez régulièrement** pour bénéficier du boost de fraîcheur
@@ -265,7 +265,7 @@ Plus de 70% des vues YouTube viennent du mobile. Vérifiez toujours que votre mi
 
 ## Générer des idées de miniatures
 
-YT MetaGen AI propose 3 idées de miniatures créatives pour chaque sujet de vidéo. C'est un excellent point de départ pour votre brainstorming visuel.`
+ToolsHuub propose 3 idées de miniatures créatives pour chaque sujet de vidéo. C'est un excellent point de départ pour votre brainstorming visuel.`
   },
   {
     slug: "augmenter-taux-clics-youtube",
@@ -310,7 +310,7 @@ Rendez-vous dans YouTube Studio > Analytics > Portée pour voir le CTR de chaque
 
 ## L'apport de l'IA
 
-YT MetaGen AI génère des titres optimisés pour le CTR et propose des idées de miniatures percutantes. En combinant ces suggestions avec votre connaissance de l'audience, vous maximisez vos chances de clics.`
+ToolsHuub génère des titres optimisés pour le CTR et propose des idées de miniatures percutantes. En combinant ces suggestions avec votre connaissance de l'audience, vous maximisez vos chances de clics.`
   },
   {
     slug: "mots-cles-longue-traine-youtube",
@@ -363,7 +363,7 @@ Filtrez par "Recherche YouTube" pour voir les tendances de recherche spécifique
 
 ## Génération automatique
 
-YT MetaGen AI génère automatiquement 10 mots-clés de longue traîne pertinents pour chaque sujet. C'est un excellent complément à votre recherche manuelle.`
+ToolsHuub génère automatiquement 10 mots-clés de longue traîne pertinents pour chaque sujet. C'est un excellent complément à votre recherche manuelle.`
   },
   {
     slug: "shorts-youtube-strategie",
@@ -409,7 +409,7 @@ Terminez avec un CTA clair : "Abonnez-vous pour plus" ou "Commentez si vous voul
 
 ## Scripts de Shorts avec l'IA
 
-YT MetaGen AI génère des scripts Shorts structurés avec intro, corps et outro pour chaque sujet. Vous obtenez un script prêt à tourner en quelques secondes, ce qui accélère considérablement votre production de contenu court.
+ToolsHuub génère des scripts Shorts structurés avec intro, corps et outro pour chaque sujet. Vous obtenez un script prêt à tourner en quelques secondes, ce qui accélère considérablement votre production de contenu court.
 
 ## Optimiser les métadonnées des Shorts
 
@@ -464,7 +464,7 @@ Commencez par une image ou une action inattendue qui capte l'attention avant mê
 
 ## Générer des hooks avec l'IA
 
-YT MetaGen AI crée 3 accroches personnalisées pour chaque sujet de vidéo. Ces hooks sont conçus pour maximiser la rétention et s'adaptent au ton de votre contenu.`
+ToolsHuub crée 3 accroches personnalisées pour chaque sujet de vidéo. Ces hooks sont conçus pour maximiser la rétention et s'adaptent au ton de votre contenu.`
   },
   {
     slug: "community-post-youtube-engagement",
@@ -517,7 +517,445 @@ Partagez un conseil ou une astuce rapide sous forme de texte ou d'image. Cela po
 
 ## Commentaire épinglé : l'astuce sous-estimée
 
-Épinglez un commentaire stratégique sous vos vidéos pour guider la discussion, poser une question ou diriger vers d'autres vidéos. YT MetaGen AI génère des commentaires épinglés engageants et des posts communauté prêts à publier pour chaque sujet.`
+Épinglez un commentaire stratégique sous vos vidéos pour guider la discussion, poser une question ou diriger vers d'autres vidéos. ToolsHuub génère des commentaires épinglés engageants et des posts communauté prêts à publier pour chaque sujet.`
+  },
+  {
+    slug: "monetisation-youtube-guide",
+    title: "Monétisation YouTube : le guide complet pour gagner de l'argent",
+    metaDescription: "Découvrez toutes les méthodes de monétisation sur YouTube en 2025. AdSense, sponsors, affiliations, produits : maximisez vos revenus de créateur.",
+    excerpt: "La monétisation YouTube ne se limite pas aux publicités. Explorez toutes les sources de revenus disponibles pour transformer votre passion en activité rentable.",
+    date: "2025-04-05",
+    readTime: "13 min",
+    category: "Monétisation",
+    relatedSlugs: ["algorithme-youtube-2025", "augmenter-taux-clics-youtube", "shorts-youtube-strategie"],
+    content: `Gagner de l'argent sur YouTube est l'objectif de nombreux créateurs. Mais la monétisation va bien au-delà des simples publicités AdSense. Voici un tour d'horizon complet des méthodes disponibles en 2025.
+
+## Prérequis : le Programme Partenaire YouTube (YPP)
+
+### Les seuils à atteindre
+
+Pour rejoindre le YPP, vous devez avoir :
+- **1 000 abonnés** minimum
+- **4 000 heures de visionnage** sur les 12 derniers mois OU **10 millions de vues Shorts** sur 90 jours
+
+### Le palier inférieur (fan funding)
+
+YouTube a introduit un palier d'entrée plus accessible :
+- 500 abonnés
+- 3 000 heures de visionnage OU 3 millions de vues Shorts
+- Ce palier donne accès aux Super Chats, Super Thanks et abonnements de chaîne
+
+## Les 7 sources de revenus YouTube
+
+### 1. Publicités AdSense
+
+La source la plus connue. Vos revenus dépendent du **CPM** (coût pour mille impressions) qui varie selon :
+- Votre niche (finance > divertissement)
+- La géographie de votre audience
+- La période de l'année (Q4 est le plus lucratif)
+
+### 2. Sponsoring et placements de produits
+
+Les marques paient directement les créateurs pour promouvoir leurs produits. Les tarifs dépendent de votre audience et de votre engagement. Un créateur avec 50K abonnés engagés peut négocier entre 500€ et 2 000€ par vidéo sponsorisée.
+
+### 3. Marketing d'affiliation
+
+Recommandez des produits et gagnez une commission sur chaque vente. Intégrez vos liens d'affiliation dans vos descriptions YouTube. Les niches tech, beauté et formation sont particulièrement lucratives.
+
+### 4. Produits et merchandising
+
+YouTube intègre des boutiques directement sur votre chaîne. Vendez des t-shirts, mugs, formations en ligne ou tout produit lié à votre marque.
+
+### 5. Super Chats et Super Thanks
+
+Vos spectateurs peuvent payer pour mettre en avant leurs messages pendant les lives (Super Chat) ou sur vos vidéos (Super Thanks).
+
+### 6. Abonnements de chaîne
+
+Proposez un abonnement mensuel avec des avantages exclusifs : badges, émojis, vidéos exclusives, accès anticipé.
+
+### 7. YouTube Premium
+
+Vous recevez une part des revenus YouTube Premium proportionnelle au temps de visionnage de vos vidéos par les abonnés Premium.
+
+## Optimiser ses revenus avec de bonnes métadonnées
+
+Des métadonnées optimisées attirent plus de vues, ce qui augmente directement vos revenus. ToolsHuub vous aide à maximiser la visibilité de chaque vidéo pour augmenter votre potentiel de monétisation.`
+  },
+  {
+    slug: "analytics-youtube-comprendre",
+    title: "YouTube Analytics : comprendre et exploiter vos statistiques",
+    metaDescription: "Apprenez à lire et interpréter YouTube Analytics pour prendre les bonnes décisions. CTR, rétention, sources de trafic : décryptage complet.",
+    excerpt: "YouTube Analytics regorge de données précieuses. Apprenez à les lire et à les transformer en actions concrètes pour développer votre chaîne.",
+    date: "2025-04-12",
+    readTime: "10 min",
+    category: "Stratégie YouTube",
+    relatedSlugs: ["algorithme-youtube-2025", "augmenter-taux-clics-youtube", "mots-cles-longue-traine-youtube"],
+    content: `YouTube Analytics est votre tableau de bord de performance. Savoir lire ces données est la clé pour prendre des décisions éclairées et accélérer la croissance de votre chaîne.
+
+## Les métriques essentielles
+
+### Vues et durée de visionnage
+
+Les vues seules ne suffisent pas. La **durée de visionnage** (Watch Time) est le facteur n°1 de l'algorithme. Une vidéo de 10 minutes regardée à 70% est meilleure qu'une vidéo de 30 minutes regardée à 20%.
+
+### Taux de clics (CTR)
+
+Le CTR mesure l'efficacité de votre miniature + titre. Suivez-le dans l'onglet "Portée". Un CTR en baisse signale qu'il faut repenser votre packaging visuel.
+
+### Rétention de l'audience
+
+Le graphique de rétention montre seconde par seconde où les spectateurs décrochent. Les pics de décrochage révèlent les moments faibles de votre contenu.
+
+### Spectateurs uniques vs vues
+
+Un spectateur unique peut générer plusieurs vues. Le ratio vues/spectateurs uniques indique si votre audience revisionne vos vidéos (bon signe !).
+
+## Les sources de trafic
+
+### Recherche YouTube
+
+Trafic venant de la barre de recherche. Si ce chiffre est élevé, votre SEO fonctionne bien. Utilisez ToolsHuub pour optimiser vos métadonnées et augmenter cette source.
+
+### Suggestions de vidéos
+
+Trafic venant des recommandations. C'est le Graal : cela signifie que l'algorithme pousse activement votre contenu.
+
+### Navigation sur la chaîne
+
+Spectateurs qui parcourent directement votre chaîne. Un indicateur de fidélité de votre audience.
+
+### Sources externes
+
+Trafic venant de Google, réseaux sociaux ou sites web. Diversifier ses sources de trafic protège contre les fluctuations de l'algorithme.
+
+## L'onglet "Audience"
+
+### Quand votre audience est en ligne
+
+Ce graphique montre les jours et heures de pic d'activité. Publiez vos vidéos 1-2 heures avant ces pics pour maximiser l'engagement initial.
+
+### Données démographiques
+
+Âge, genre et géographie de votre audience. Ces données influencent votre CPM et doivent guider votre stratégie de contenu.
+
+### Chaînes regardées par votre audience
+
+Une mine d'or pour comprendre les intérêts de vos spectateurs et identifier des opportunités de collaboration.
+
+## Transformer les données en actions
+
+1. **CTR bas + bonne rétention** : améliorez vos miniatures et titres
+2. **Bon CTR + mauvaise rétention** : améliorez votre contenu et vos hooks
+3. **Peu de trafic recherche** : optimisez votre SEO avec ToolsHuub
+4. **Peu de suggestions** : travaillez la rétention et la satisfaction`
+  },
+  {
+    slug: "playlists-youtube-optimiser",
+    title: "Playlists YouTube : comment les optimiser pour plus de vues",
+    metaDescription: "Les playlists YouTube sont un levier SEO sous-estimé. Apprenez à les créer, les optimiser et les utiliser pour augmenter votre durée de visionnage.",
+    excerpt: "Les playlists ne servent pas qu'à organiser vos vidéos. Bien optimisées, elles augmentent votre durée de visionnage et améliorent votre référencement.",
+    date: "2025-04-20",
+    readTime: "7 min",
+    category: "SEO YouTube",
+    relatedSlugs: ["ecrire-descriptions-youtube", "tags-youtube-guide-complet", "algorithme-youtube-2025"],
+    content: `Les playlists YouTube sont un outil de croissance sous-estimé. Elles apparaissent dans les résultats de recherche, augmentent la durée de visionnage et améliorent l'organisation de votre chaîne.
+
+## Pourquoi les playlists sont importantes
+
+### Elles apparaissent dans les résultats de recherche
+
+Les playlists sont indexées par YouTube et Google. Une playlist bien nommée peut se classer pour des mots-clés que vos vidéos individuelles ne ciblent pas.
+
+### Elles augmentent le Watch Time
+
+Quand un spectateur lance une playlist, les vidéos s'enchaînent automatiquement. Cela peut doubler ou tripler votre durée de visionnage par session.
+
+### Elles structurent votre chaîne
+
+Une chaîne bien organisée en playlists thématiques incite les visiteurs à explorer davantage de contenu.
+
+## Comment créer des playlists optimisées
+
+### Titres de playlists avec mots-clés
+
+Traitez le titre de votre playlist comme un titre de vidéo. Intégrez votre mot-clé principal :
+- ❌ "Mes tutoriels"
+- ✅ "Tutoriels Photoshop pour débutants - Apprendre le design graphique"
+
+### Descriptions de playlists
+
+YouTube vous donne un champ de description pour chaque playlist. Utilisez-le ! Rédigez 2-3 paragraphes avec vos mots-clés, comme vous le feriez pour une vidéo.
+
+### Ordre des vidéos
+
+Placez vos meilleures vidéos en premier. La première vidéo de la playlist est celle qui sera jouée quand quelqu'un clique sur la playlist dans les résultats de recherche.
+
+## Stratégies avancées
+
+### Playlists collaboratives
+
+Invitez d'autres créateurs à ajouter des vidéos à vos playlists. Cela crée des liens et expose votre contenu à de nouvelles audiences.
+
+### Playlists de séries
+
+Pour du contenu épisodique, utilisez la fonctionnalité "Série officielle" de YouTube. Les épisodes suivants apparaîtront automatiquement en suggestion.
+
+### Playlists saisonnières
+
+Créez des playlists temporaires pour les tendances saisonnières : "Recettes de Noël", "Préparation rentrée scolaire". Elles peuvent capter du trafic de recherche saisonnier.
+
+## Combiner playlists et métadonnées
+
+Utilisez ToolsHuub pour générer les métadonnées de chaque vidéo, puis regroupez-les dans des playlists thématiques cohérentes. Cette double optimisation maximise votre visibilité.`
+  },
+  {
+    slug: "collaborations-youtube-croissance",
+    title: "Collaborations YouTube : accélérer la croissance de votre chaîne",
+    metaDescription: "Les collaborations YouTube sont le moyen le plus rapide de gagner des abonnés. Découvrez comment trouver des partenaires, proposer des collabs et en tirer le maximum.",
+    excerpt: "Les collaborations entre créateurs restent le moyen le plus efficace de croître sur YouTube. Voici comment les aborder stratégiquement.",
+    date: "2025-04-28",
+    readTime: "9 min",
+    category: "Croissance YouTube",
+    relatedSlugs: ["algorithme-youtube-2025", "community-post-youtube-engagement", "shorts-youtube-strategie"],
+    content: `Les collaborations sont le raccourci le plus puissant pour développer sa chaîne YouTube. Une seule collaboration réussie peut vous apporter autant d'abonnés que des mois de publication régulière.
+
+## Pourquoi les collaborations fonctionnent
+
+### Transfert de confiance
+
+Quand un créateur vous recommande à son audience, il transfère une partie de la confiance qu'il a bâtie. Ses spectateurs sont prédisposés à vous donner une chance.
+
+### Exposition croisée
+
+Chaque créateur expose l'autre à une audience qui ne le connaissait pas. C'est un échange gagnant-gagnant qui multiplie la portée de chacun.
+
+### Signal positif pour l'algorithme
+
+Les vidéos collaboratives génèrent souvent plus d'engagement que la moyenne, ce que l'algorithme récompense avec plus de recommandations.
+
+## Comment trouver le bon partenaire
+
+### Taille similaire
+
+Visez des créateurs de taille comparable (0.5x à 2x votre nombre d'abonnés). Les écarts trop importants créent un déséquilibre dans l'échange.
+
+### Audience complémentaire
+
+L'idéal est de collaborer avec quelqu'un dans une niche adjacente, pas identique. Un créateur cuisine + un créateur lifestyle, par exemple.
+
+### Vérifiez l'engagement
+
+Le nombre d'abonnés ne suffit pas. Vérifiez le ratio vues/abonnés et le nombre de commentaires. Un créateur avec 10K abonnés engagés vaut mieux qu'un avec 100K abonnés inactifs.
+
+## Comment proposer une collaboration
+
+### Le message parfait
+
+1. **Montrez que vous connaissez leur contenu** : mentionnez une vidéo spécifique
+2. **Proposez une idée concrète** : pas juste "on devrait collaborer"
+3. **Expliquez le bénéfice mutuel** : qu'est-ce que vous apportez ?
+4. **Restez bref et professionnel**
+
+### Où les contacter
+
+- Email professionnel (dans leur section "À propos")
+- Messages directs sur les réseaux sociaux
+- Commentaires sous leurs vidéos (en dernier recours)
+
+## Formats de collaborations
+
+### Vidéo ensemble
+
+Le format classique : vous filmez une vidéo ensemble, publiée sur une ou deux chaînes.
+
+### Challenge croisé
+
+Chacun relève un défi proposé par l'autre, filmé séparément. Facile à organiser même à distance.
+
+### Série invité
+
+Invitez régulièrement des créateurs dans une rubrique dédiée de votre chaîne.
+
+### Collaboration Shorts
+
+Format rapide et efficace : créez un Short ensemble ou réagissez au contenu de l'autre.
+
+## Maximiser l'impact
+
+Annoncez la collaboration à l'avance via les posts communauté (que ToolsHuub peut vous aider à rédiger) et optimisez les métadonnées de la vidéo collaborative pour qu'elle soit découverte par les deux audiences.`
+  },
+  {
+    slug: "tendances-youtube-2025",
+    title: "Les tendances YouTube à suivre en 2025 pour réussir",
+    metaDescription: "Quelles sont les tendances YouTube en 2025 ? IA, podcasts vidéo, Shorts, authenticité : les formats et stratégies qui dominent la plateforme cette année.",
+    excerpt: "YouTube évolue rapidement. Découvrez les tendances majeures de 2025 et comment adapter votre stratégie pour rester pertinent et croître.",
+    date: "2025-05-05",
+    readTime: "11 min",
+    category: "Stratégie YouTube",
+    relatedSlugs: ["algorithme-youtube-2025", "shorts-youtube-strategie", "hooks-accroches-video-youtube"],
+    content: `YouTube en 2025 est une plateforme en pleine mutation. Entre l'essor de l'IA, la domination des Shorts et les nouvelles habitudes de consommation, les créateurs doivent s'adapter pour rester compétitifs.
+
+## Tendance 1 : L'IA au service de la création
+
+### Production assistée par IA
+
+L'intelligence artificielle transforme le workflow des créateurs :
+- **Génération de scripts** et d'idées de contenu
+- **Optimisation SEO automatique** des titres, descriptions et tags
+- **Sous-titrage et traduction** automatiques pour toucher un public international
+- **Édition vidéo assistée** pour accélérer le montage
+
+Des outils comme ToolsHuub permettent de générer des métadonnées complètes en quelques secondes, libérant du temps pour la création de contenu.
+
+### Détection de contenu IA
+
+YouTube renforce ses outils de transparence sur le contenu généré par IA. Les créateurs doivent signaler l'utilisation d'IA réaliste dans leurs vidéos.
+
+## Tendance 2 : Le podcast vidéo explose
+
+### YouTube comme plateforme de podcasts
+
+YouTube est devenu la première plateforme de consommation de podcasts. Le format long (1h+) en mode conversation connaît une croissance massive.
+
+### Comment en profiter
+
+- Lancez une version vidéo de votre podcast
+- Découpez les meilleurs moments en Shorts
+- Optimisez chaque épisode avec des métadonnées complètes
+
+## Tendance 3 : Les Shorts matures
+
+### Au-delà du divertissement
+
+Les Shorts ne sont plus réservés aux danses et aux trends. Le contenu éducatif, informatif et professionnel en format court explose.
+
+### Monétisation renforcée
+
+YouTube améliore continuellement la monétisation des Shorts, rendant le format viable comme source de revenus principale.
+
+## Tendance 4 : L'authenticité avant la production
+
+### Le retour au naturel
+
+Les spectateurs privilégient l'authenticité sur la qualité de production. Un vlog sincère filmé au smartphone peut surpasser une production léchée qui manque de personnalité.
+
+### Le storytelling personnel
+
+Les créateurs qui partagent leurs parcours, leurs échecs et leurs apprentissages créent des connexions plus profondes avec leur audience.
+
+## Tendance 5 : La diversification des revenus
+
+### Au-delà d'AdSense
+
+Les créateurs les plus malins diversifient leurs revenus :
+- Formations en ligne et coaching
+- Communautés payantes
+- Produits physiques et digitaux
+- Événements et meetups
+
+## Tendance 6 : Le multi-format
+
+### Un sujet, plusieurs formats
+
+Les créateurs performants déclinent chaque sujet en plusieurs formats :
+- Une vidéo longue approfondie
+- 3-5 Shorts extraits des meilleurs moments
+- Un post communauté pour engager la discussion
+- Un commentaire épinglé stratégique
+
+ToolsHuub génère tous ces éléments simultanément à partir d'un seul sujet, facilitant cette approche multi-format.
+
+## Comment s'adapter
+
+1. **Intégrez l'IA** dans votre workflow sans perdre votre authenticité
+2. **Expérimentez les formats longs** si votre niche s'y prête
+3. **Publiez des Shorts** régulièrement, même si votre focus est le format long
+4. **Restez authentique** : c'est votre avantage concurrentiel face à l'IA
+5. **Diversifiez vos revenus** pour ne pas dépendre d'une seule source`
+  },
+  {
+    slug: "storytelling-video-youtube",
+    title: "Le storytelling sur YouTube : captiver votre audience du début à la fin",
+    metaDescription: "Maîtrisez l'art du storytelling pour YouTube. Structure narrative, tension dramatique, arcs émotionnels : les techniques pour créer des vidéos mémorables.",
+    excerpt: "Le storytelling est ce qui différencie une vidéo oubliée d'une vidéo mémorable. Apprenez les techniques narratives qui captivent les spectateurs.",
+    date: "2025-05-12",
+    readTime: "10 min",
+    category: "Création de contenu",
+    relatedSlugs: ["hooks-accroches-video-youtube", "shorts-youtube-strategie", "augmenter-taux-clics-youtube"],
+    content: `Le storytelling est l'art de raconter des histoires. Sur YouTube, c'est la compétence qui transforme des vidéos ordinaires en contenus mémorables que les spectateurs partagent et revisionnent.
+
+## Pourquoi le storytelling fonctionne
+
+### Le cerveau aime les histoires
+
+Notre cerveau est câblé pour les récits. Quand on écoute une histoire, les zones cérébrales liées aux émotions s'activent. Un fait est oublié, une histoire reste.
+
+### Rétention maximale
+
+Les vidéos structurées comme des récits maintiennent une rétention élevée car le spectateur veut connaître la suite. C'est exactement ce que l'algorithme YouTube récompense.
+
+## La structure narrative en 5 actes
+
+### Acte 1 : Le hook (0-30 secondes)
+
+Présentez le conflit ou la question centrale. "J'ai dépensé 10 000€ dans une caméra... et ça a failli tuer ma chaîne."
+
+### Acte 2 : Le contexte (30s - 2 min)
+
+Donnez le contexte nécessaire pour comprendre l'enjeu. Présentez les personnages, la situation initiale et les obstacles.
+
+### Acte 3 : La tension (2 min - 60%)
+
+C'est le cœur de votre vidéo. Construisez la tension progressivement. Chaque nouveau point doit élever les enjeux.
+
+### Acte 4 : Le climax (60% - 80%)
+
+Le moment de résolution. La réponse à la question posée au début, la solution au problème, le tournant décisif.
+
+### Acte 5 : La conclusion (80% - 100%)
+
+Les leçons tirées, les prochaines étapes, et un appel à l'action. Ne terminez jamais brusquement.
+
+## Techniques de storytelling pour YouTube
+
+### La boucle ouverte
+
+Posez une question en début de vidéo, promettez la réponse pour plus tard. Le spectateur reste pour la résolution.
+
+### Le contraste avant/après
+
+Montrez le "avant" problématique puis le "après" transformé. Ce contraste est visuellement puissant et émotionnellement satisfaisant.
+
+### L'ennemi commun
+
+Identifiez un obstacle ou une frustration que votre audience partage. Positionnez-vous comme l'allié qui va les aider à le surmonter.
+
+### Les micro-hooks
+
+N'ayez pas qu'un seul hook en début de vidéo. Placez des mini-accroches toutes les 2-3 minutes pour maintenir l'attention : "Mais attendez, ce n'est pas tout...", "Le plus surprenant, c'est..."
+
+### Le pattern interrupt
+
+Cassez le rythme régulièrement : changement d'angle de caméra, insert visuel, changement de ton. Le cerveau se réveille à chaque variation.
+
+## Storytelling pour différents formats
+
+### Tutoriels
+
+Même un tutoriel technique peut raconter une histoire : le problème initial, les tentatives échouées, et enfin la solution qui fonctionne.
+
+### Vidéos éducatives
+
+Structurez votre contenu comme un voyage de découverte. Partez d'une question intrigante et guidez le spectateur vers la réponse.
+
+### Vlogs
+
+Le vlog est un storytelling naturel. Sélectionnez les moments qui servent votre arc narratif plutôt que de tout montrer chronologiquement.
+
+## Combiner storytelling et SEO
+
+Un bon storytelling améliore la rétention, ce qui booste l'algorithme. Combinez cela avec des métadonnées optimisées via ToolsHuub pour maximiser à la fois la découvrabilité et l'engagement de vos vidéos.`
   }
 ];
 
