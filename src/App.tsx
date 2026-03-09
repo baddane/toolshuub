@@ -28,10 +28,13 @@ import {
   Moon,
   Key,
   Eye,
-  EyeOff
+  EyeOff,
+  Link,
+  FileText,
+  List
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { generateYouTubeMetadata, YouTubeMetadata, loadApiKey, saveApiKey } from './services/geminiService';
+import { generateYouTubeMetadata, YouTubeMetadata, VideoInput, buildPrompt, loadApiKey, saveApiKey } from './services/geminiService';
 import BlogList from './BlogList';
 import BlogArticlePage from './BlogArticle';
 import { blogArticles } from './blogData';
@@ -68,7 +71,6 @@ const MOCK_RESULT: YouTubeMetadata = {
   longTailKeywords: ["comment dresser un chaton qui griffe", "méthode positive dressage chat adulte", "faire venir son chat quand on l'appelle"]
 };
 
-const MAX_INPUT_LENGTH = 200;
 
 function loadHistory(): YouTubeMetadata[] {
   try {
@@ -125,7 +127,7 @@ function useRouter() {
 export default function App() {
   const { path, navigate } = useRouter();
   const { dark, toggle: toggleTheme } = useTheme();
-  const [input, setInput] = useState('');
+  const [videoInput, setVideoInput] = useState<VideoInput>({ subject: '', chapters: '', siteUrl: '', articleUrl: '' });
   const [loading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState('gemini-3-flash-preview');
   const [result, setResult] = useState<YouTubeMetadata | null>(null);
@@ -154,15 +156,14 @@ export default function App() {
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = input.trim();
-    if (!trimmed) return;
-    if (trimmed.length > MAX_INPUT_LENGTH) return;
+    if (!videoInput.subject.trim()) return;
 
     setShowExample(false);
     setError(null);
     setLoading(true);
     try {
-      const data = await generateYouTubeMetadata(trimmed, selectedModel, apiKey);
+      const prompt = buildPrompt(videoInput);
+      const data = await generateYouTubeMetadata(prompt, selectedModel, apiKey);
       setResult(data);
       saveToHistory(data);
     } catch (err) {
@@ -393,39 +394,73 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <form onSubmit={handleGenerate} className="relative flex flex-col sm:flex-row gap-3 bg-gray-100 dark:bg-white/5 p-3 rounded-3xl border border-gray-200 dark:border-white/10 focus-within:ring-4 focus-within:ring-red-500/10 transition-all backdrop-blur-md">
-              <div className="flex-1 flex items-center px-4">
-                <Search className="w-5 h-5 text-gray-300 dark:text-white/20" />
+            <form onSubmit={handleGenerate} className="relative bg-gray-100 dark:bg-white/5 p-5 rounded-3xl border border-gray-200 dark:border-white/10 focus-within:ring-4 focus-within:ring-red-500/10 transition-all backdrop-blur-md space-y-4">
+              {/* Sujet */}
+              <div className="flex items-center gap-3 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10 px-4 py-3">
+                <Search className="w-5 h-5 text-gray-300 dark:text-white/20 shrink-0" />
                 <input
                   type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT_LENGTH))}
+                  value={videoInput.subject}
+                  onChange={(e) => setVideoInput(prev => ({ ...prev, subject: e.target.value }))}
                   placeholder="Sujet de votre vidéo..."
-                  maxLength={MAX_INPUT_LENGTH}
-                  className="w-full bg-transparent border-none px-4 py-4 text-lg focus:outline-none placeholder:text-gray-400 dark:placeholder:text-white/20 font-medium"
+                  className="w-full bg-transparent border-none text-lg focus:outline-none placeholder:text-gray-400 dark:placeholder:text-white/20 font-medium"
                 />
               </div>
-              <button
-                type="submit"
-                disabled={loading || !input.trim()}
-                className="btn-primary"
-              >
-                {loading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <>
-                    Générer
-                    <Sparkles className="w-5 h-5" />
-                  </>
-                )}
-              </button>
-            </form>
-            
-            {input.length > 0 && (
-              <div className={`mt-2 text-right text-[10px] font-mono ${input.length >= MAX_INPUT_LENGTH ? 'text-red-400' : 'text-gray-400 dark:text-white/20'}`}>
-                {input.length}/{MAX_INPUT_LENGTH}
+
+              {/* Chapitres */}
+              <div className="flex items-start gap-3 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10 px-4 py-3">
+                <List className="w-5 h-5 text-gray-300 dark:text-white/20 shrink-0 mt-1" />
+                <textarea
+                  value={videoInput.chapters}
+                  onChange={(e) => setVideoInput(prev => ({ ...prev, chapters: e.target.value }))}
+                  placeholder={"Chapitres avec horaires (optionnel)\nEx: 0:00 - Introduction\n1:30 - Premier point\n5:00 - Développement"}
+                  rows={3}
+                  className="w-full bg-transparent border-none text-sm focus:outline-none placeholder:text-gray-400 dark:placeholder:text-white/20 resize-none"
+                />
               </div>
-            )}
+
+              {/* URLs */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-center gap-3 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10 px-4 py-3">
+                  <Link className="w-4 h-4 text-gray-300 dark:text-white/20 shrink-0" />
+                  <input
+                    type="url"
+                    value={videoInput.siteUrl}
+                    onChange={(e) => setVideoInput(prev => ({ ...prev, siteUrl: e.target.value }))}
+                    placeholder="URL du site (optionnel)"
+                    className="w-full bg-transparent border-none text-sm focus:outline-none placeholder:text-gray-400 dark:placeholder:text-white/20"
+                  />
+                </div>
+                <div className="flex items-center gap-3 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10 px-4 py-3">
+                  <FileText className="w-4 h-4 text-gray-300 dark:text-white/20 shrink-0" />
+                  <input
+                    type="url"
+                    value={videoInput.articleUrl}
+                    onChange={(e) => setVideoInput(prev => ({ ...prev, articleUrl: e.target.value }))}
+                    placeholder="URL de l'article (optionnel)"
+                    className="w-full bg-transparent border-none text-sm focus:outline-none placeholder:text-gray-400 dark:placeholder:text-white/20"
+                  />
+                </div>
+              </div>
+
+              {/* Submit */}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={loading || !videoInput.subject.trim()}
+                  className="btn-primary"
+                >
+                  {loading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      Générer
+                      <Sparkles className="w-5 h-5" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
 
             {error && (
               <div className="mt-4 flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
@@ -690,7 +725,7 @@ export default function App() {
                 </div>
 
                 <button
-                  onClick={() => setInput('') || setResult(null) || setShowExample(false)}
+                  onClick={() => { setVideoInput({ subject: '', chapters: '', siteUrl: '', articleUrl: '' }); setResult(null); setShowExample(false); }}
                   className="btn-secondary w-full text-xs font-bold uppercase tracking-widest"
                 >
                   <RefreshCw className="w-4 h-4" />

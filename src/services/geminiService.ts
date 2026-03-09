@@ -12,21 +12,42 @@ export interface YouTubeMetadata {
   longTailKeywords: string[];
 }
 
-const SYSTEM_INSTRUCTION = `Tu es un expert en SEO YouTube et en marketing de contenu.
-Ta mission est de générer des métadonnées complètes et optimisées pour une vidéo YouTube à partir d'un simple titre ou d'un sujet fourni par l'utilisateur.
+export interface VideoInput {
+  subject: string;
+  chapters: string;
+  siteUrl: string;
+  articleUrl: string;
+}
+
+const SYSTEM_INSTRUCTION = `Agis comme un expert en SEO YouTube et en rédaction pour les chaînes éducatives.
+Ta mission est de générer des métadonnées complètes et optimisées pour une vidéo YouTube.
 Réponds TOUJOURS en français.
-Génère :
+
+Pour le champ "description", tu dois rédiger une description YouTube professionnelle, optimisée pour l'algorithme YouTube et pour le référencement Google, en respectant cette structure :
+1. Un titre accrocheur optimisé SEO en début de description.
+2. Un premier paragraphe qui explique clairement le problème que la vidéo résout.
+3. Une section avec une liste de points clés avec des emojis (✅) expliquant ce que la vidéo va apprendre.
+4. Un court paragraphe qui précise à qui s'adresse la vidéo (expatriés, entrepreneurs, investisseurs, etc.).
+5. Une section "📌 Chapitres de la vidéo" reprenant les chapitres fournis par l'utilisateur.
+6. Une section "🔗 Liens utiles" avec les liens du site et de l'article fournis par l'utilisateur.
+7. Une question engageante pour inciter les commentaires (précédée de 💬).
+8. Un appel à l'abonnement (précédé de 🔔).
+9. Une liste de hashtags SEO liés au sujet.
+Style : clair, professionnel, pédagogique, optimisé SEO, facile à lire.
+Longueur de la description : entre 180 et 300 mots.
+La description doit être structurée avec des emojis et des espaces pour être agréable à lire sur YouTube.
+
+Pour les autres champs, génère :
 1. 5 propositions de titres accrocheurs (click-worthy) et optimisés SEO.
-2. Une description structurée incluant un résumé captivant, des chapitres suggérés et des appels à l'action.
-3. Une liste de 15 à 20 tags pertinents.
-4. 3 idées de miniatures (thumbnails) visuelles.
-5. 3 "hooks" (accroches) pour le début de la vidéo.
-6. Un script court pour YouTube Shorts / TikTok (30-60s).
-7. Un post prêt à l'emploi pour l'onglet Communauté.
-8. Un commentaire épinglé (Pinned Comment) engageant.
-9. Une analyse de l'audience cible (qui et pourquoi).
-10. 3 variantes de CTA (Call to Action).
-11. 10 mots-clés de "Longue Traîne" spécifiques.`;
+2. Une liste de 15 à 20 tags pertinents.
+3. 3 idées de miniatures (thumbnails) visuelles.
+4. 3 "hooks" (accroches) pour le début de la vidéo.
+5. Un script court pour YouTube Shorts / TikTok (30-60s).
+6. Un post prêt à l'emploi pour l'onglet Communauté.
+7. Un commentaire épinglé (Pinned Comment) engageant.
+8. Une analyse de l'audience cible (qui et pourquoi).
+9. 3 variantes de CTA (Call to Action).
+10. 10 mots-clés de "Longue Traîne" spécifiques.`;
 
 const RESPONSE_SCHEMA = {
   type: "OBJECT",
@@ -66,6 +87,20 @@ export function saveApiKey(key: string) {
       localStorage.removeItem('gemini_api_key');
     }
   } catch {}
+}
+
+export function buildPrompt(input: VideoInput): string {
+  let prompt = `Le sujet de la vidéo est : ${input.subject}`;
+  if (input.chapters.trim()) {
+    prompt += `\n\nLes chapitres de la vidéo sont :\n${input.chapters}`;
+  }
+  if (input.siteUrl.trim()) {
+    prompt += `\n\nLe site à promouvoir est : ${input.siteUrl}`;
+  }
+  if (input.articleUrl.trim()) {
+    prompt += `\n\nL'article associé est : ${input.articleUrl}`;
+  }
+  return prompt;
 }
 
 export async function generateYouTubeMetadata(
