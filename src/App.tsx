@@ -136,10 +136,11 @@ function persistHistory(data: YouTubeMetadata[]) {
 }
 
 function loadApiKeys(): Record<ProviderId, string> {
+  const defaults: Record<ProviderId, string> = { gemini: '', openai: '', anthropic: '', deepseek: '' };
   try {
     const saved = localStorage.getItem(APIKEYS_KEY);
-    return saved ? JSON.parse(saved) : { gemini: '', openai: '', anthropic: '', deepseek: '' };
-  } catch { return { gemini: '', openai: '', anthropic: '', deepseek: '' }; }
+    return saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
+  } catch { return defaults; }
 }
 
 function saveApiKeys(keys: Record<ProviderId, string>) {
