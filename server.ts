@@ -131,6 +131,118 @@ async function generateWithAnthropic(prompt: string, model: string, apiKey: stri
   return JSON.parse(extractJSON(text));
 }
 
+const emailSystemInstruction = `Tu es un expert en communication professionnelle et rédaction d'emails.
+L'utilisateur te fournit un brouillon d'email imparfait ou incomplet.
+Réponds dans la même langue que le brouillon fourni.
+
+Génère exactement 3 versions améliorées :
+1. "Correction & Clarté" : corrige les fautes d'orthographe et de grammaire, améliore la structure et la clarté en restant fidèle à l'intention originale.
+2. "Professionnel" : reformule avec un ton professionnel et formel, adapté au contexte business.
+3. "Percutant" : réécris de façon concise, directe et impactante pour maximiser le taux de réponse.
+
+Pour chaque version, génère également un sujet d'email optimisé.`;
+
+const emailJsonFormat = `
+
+IMPORTANT: Réponds UNIQUEMENT avec du JSON valide, sans texte avant ou après, sans bloc de code markdown. Le JSON doit contenir exactement cette structure :
+{
+  "versions": [
+    {
+      "label": "string (nom de la version)",
+      "description": "string (courte description de l'approche)",
+      "subject": "string (sujet d'email optimisé)",
+      "body": "string (corps de l'email complet)"
+    }
+  ]
+}`;
+
+app.post("/api/improve-email", async (req, res) => {
+  const { draft, model: requestedModel, provider = "gemini", apiKey = "" } = req.body;
+  if (!draft) {
+    return res.status(400).json({ error: "Draft is required" });
+  }
+
+  const model = requestedModel || "gemini-3-flash-preview";
+
+  try {
+    let result: unknown;
+
+    if (provider === "openai") {
+      const openai = new OpenAI({ apiKey: apiKey || process.env.OPENAI_API_KEY || "" });
+      const r = await openai.chat.completions.create({
+        model,
+        messages: [
+          { role: "system", content: emailSystemInstruction + emailJsonFormat },
+          { role: "user", content: draft },
+        ],
+        response_format: { type: "json_object" },
+      });
+      result = JSON.parse(r.choices[0].message.content || "{}");
+    } else if (provider === "anthropic") {
+      const anthropic = new Anthropic({ apiKey: apiKey || process.env.ANTHROPIC_API_KEY || "" });
+      const r = await anthropic.messages.create({
+        model,
+        max_tokens: 4096,
+        system: emailSystemInstruction + emailJsonFormat,
+        messages: [{ role: "user", content: draft }],
+      });
+      const block = r.content.find((b) => b.type === "text");
+      const text = block && block.type === "text" ? block.text : "{}";
+      result = JSON.parse(extractJSON(text));
+    } else if (provider === "deepseek") {
+      const deepseek = new OpenAI({
+        apiKey: apiKey || process.env.DEEPSEEK_API_KEY || "",
+        baseURL: "https://api.deepseek.com",
+      });
+      const isReasoner = model === "deepseek-reasoner";
+      const r = await deepseek.chat.completions.create({
+        model,
+        messages: [
+          { role: "system", content: emailSystemInstruction + emailJsonFormat },
+          { role: "user", content: draft },
+        ],
+        ...(isReasoner ? {} : { response_format: { type: "json_object" } }),
+      });
+      result = JSON.parse(extractJSON(r.choices[0].message.content || "{}"));
+    } else {
+      const ai = new GoogleGenAI({ apiKey: apiKey || process.env.GEMINI_API_KEY || "" });
+      const r = await ai.models.generateContent({
+        model,
+        contents: [{ parts: [{ text: draft }] }],
+        config: {
+          systemInstruction: emailSystemInstruction,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              versions: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    label:       { type: Type.STRING },
+                    description: { type: Type.STRING },
+                    subject:     { type: Type.STRING },
+                    body:        { type: Type.STRING },
+                  },
+                  required: ["label", "description", "subject", "body"],
+                },
+              },
+            },
+            required: ["versions"],
+          },
+        },
+      });
+      result = JSON.parse(r.text || "{}");
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Email improvement error:", error);
+    res.status(500).json({ error: "Erreur lors de l'amélioration de l'email." });
+  }
+});
+
 app.post("/api/generate", async (req, res) => {
   const { prompt, model: requestedModel, provider = "gemini", apiKey = "" } = req.body;
   if (!prompt) {

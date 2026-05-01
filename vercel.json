@@ -4,6 +4,7 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/api/generate", "destination": "/api/generate" },
+    { "source": "/api/improve-email", "destination": "/api/improve-email" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

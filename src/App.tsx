@@ -28,96 +28,21 @@ import {
   Eye,
   EyeOff,
   X,
-  Settings
+  Settings,
+  Mail
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateYouTubeMetadata, YouTubeMetadata } from './services/geminiService';
 import BlogList from './BlogList';
 import BlogArticlePage from './BlogArticle';
+import EmailImprover from './EmailImprover';
 import { blogArticles } from './blogData';
-
-// ── Provider / model config ────────────────────────────────────────────────
-
-type ProviderId = 'gemini' | 'openai' | 'anthropic' | 'deepseek';
-
-interface ModelOption {
-  id: string;
-  name: string;
-  desc: string;
-}
-
-interface Provider {
-  id: ProviderId;
-  name: string;
-  tagline: string;
-  docsUrl: string;
-  models: ModelOption[];
-}
-
-const PROVIDERS: Provider[] = [
-  {
-    id: 'gemini',
-    name: 'Gemini',
-    tagline: 'Google DeepMind',
-    docsUrl: 'https://aistudio.google.com/apikey',
-    models: [
-      { id: 'gemini-3.1-flash-lite-preview', name: 'Flash Lite', desc: 'Le plus rapide' },
-      { id: 'gemini-3-flash-preview',         name: 'Flash',      desc: 'Équilibré' },
-      { id: 'gemini-3.1-pro-preview',          name: 'Pro',        desc: 'Le plus puissant' },
-    ],
-  },
-  {
-    id: 'openai',
-    name: 'OpenAI',
-    tagline: 'GPT-4o',
-    docsUrl: 'https://platform.openai.com/api-keys',
-    models: [
-      { id: 'gpt-4o-mini', name: 'GPT-4o Mini', desc: 'Rapide & économique' },
-      { id: 'gpt-4o',      name: 'GPT-4o',      desc: 'Très puissant' },
-    ],
-  },
-  {
-    id: 'anthropic',
-    name: 'Claude',
-    tagline: 'Anthropic',
-    docsUrl: 'https://console.anthropic.com/settings/keys',
-    models: [
-      { id: 'claude-haiku-4-5-20251001', name: 'Haiku 4.5',  desc: 'Rapide' },
-      { id: 'claude-sonnet-4-6',         name: 'Sonnet 4.6', desc: 'Équilibré' },
-    ],
-  },
-  {
-    id: 'deepseek',
-    name: 'DeepSeek',
-    tagline: 'DeepSeek AI',
-    docsUrl: 'https://platform.deepseek.com/api_keys',
-    models: [
-      { id: 'deepseek-chat',     name: 'Chat',     desc: 'Général' },
-      { id: 'deepseek-reasoner', name: 'Reasoner', desc: 'Raisonnement avancé' },
-    ],
-  },
-];
-
-const PROVIDER_COLORS: Record<ProviderId, string> = {
-  gemini:    'blue',
-  openai:    'green',
-  anthropic: 'orange',
-  deepseek:  'purple',
-};
-
-const PROVIDER_ACTIVE: Record<ProviderId, string> = {
-  gemini:    'bg-blue-500/10 border-blue-500 shadow-blue-500/10',
-  openai:    'bg-green-500/10 border-green-500 shadow-green-500/10',
-  anthropic: 'bg-orange-500/10 border-orange-500 shadow-orange-500/10',
-  deepseek:  'bg-purple-500/10 border-purple-500 shadow-purple-500/10',
-};
-
-const PROVIDER_ICON_ACTIVE: Record<ProviderId, string> = {
-  gemini:    'bg-blue-500 text-white',
-  openai:    'bg-green-500 text-white',
-  anthropic: 'bg-orange-500 text-white',
-  deepseek:  'bg-purple-500 text-white',
-};
+import {
+  PROVIDERS,
+  PROVIDER_ACTIVE,
+  PROVIDER_ICON_ACTIVE,
+  ProviderId,
+} from './config/providers';
 
 // ── localStorage helpers ───────────────────────────────────────────────────
 
@@ -393,6 +318,15 @@ export default function App() {
           </button>
           <nav className="flex items-center gap-2">
             <button
+              onClick={() => navigate('/email')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                path === '/email' ? 'bg-red-500/10 text-red-400' : 'text-white/50 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Mail className="w-4 h-4" />
+              Email AI
+            </button>
+            <button
               onClick={() => navigate('/blog')}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
                 path.startsWith('/blog') ? 'bg-red-500/10 text-red-400' : 'text-white/50 hover:text-white hover:bg-white/5'
@@ -506,7 +440,9 @@ export default function App() {
         </AnimatePresence>
 
         {/* Router */}
-        {path === '/blog' ? (
+        {path === '/email' ? (
+          <EmailImprover onNavigate={navigate} />
+        ) : path === '/blog' ? (
           <BlogList onNavigate={navigate} />
         ) : path.startsWith('/blog/') ? (
           <BlogArticlePage slug={path.replace('/blog/', '')} onNavigate={navigate} />
