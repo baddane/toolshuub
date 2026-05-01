@@ -12,7 +12,12 @@ export interface YouTubeMetadata {
   longTailKeywords: string[];
 }
 
-export async function generateYouTubeMetadata(prompt: string, model: string = "gemini-3-flash-preview"): Promise<YouTubeMetadata> {
+export async function generateYouTubeMetadata(
+  prompt: string,
+  model: string = "gemini-3-flash-preview",
+  provider: string = "gemini",
+  apiKey: string = ""
+): Promise<YouTubeMetadata> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 30000);
 
@@ -20,7 +25,7 @@ export async function generateYouTubeMetadata(prompt: string, model: string = "g
     const response = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt, model }),
+      body: JSON.stringify({ prompt, model, provider, apiKey }),
       signal: controller.signal,
     });
 
