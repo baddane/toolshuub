@@ -291,7 +291,17 @@ app.post("/api/cognitive", async (req, res) => {
     let result: unknown;
 
     if (provider === "openai") {
-      result = await generateWithOpenAI(prompt, model, apiKey);
+      const openai = new OpenAI({ apiKey: apiKey || process.env.OPENAI_API_KEY || "" });
+      const r = await openai.chat.completions.create({
+        model,
+        messages: [
+          { role: "system", content: sysInstruction + cognitiveJsonFormat },
+          { role: "user", content: prompt },
+        ],
+        response_format: { type: "json_object" },
+        max_tokens: 5000,
+      });
+      result = JSON.parse(r.choices[0].message.content || "{}");
     } else if (provider === "anthropic") {
       const anthropic = new Anthropic({ apiKey: apiKey || process.env.ANTHROPIC_API_KEY || "" });
       const response = await anthropic.messages.create({
@@ -304,7 +314,21 @@ app.post("/api/cognitive", async (req, res) => {
       const text = block && block.type === "text" ? block.text : "{}";
       result = JSON.parse(extractJSON(text));
     } else if (provider === "deepseek") {
-      result = await generateWithDeepSeek(prompt, model, apiKey);
+      const deepseek = new OpenAI({
+        apiKey: apiKey || process.env.DEEPSEEK_API_KEY || "",
+        baseURL: "https://api.deepseek.com",
+      });
+      const isReasoner = model === "deepseek-reasoner";
+      const r = await deepseek.chat.completions.create({
+        model,
+        messages: [
+          { role: "system", content: sysInstruction + cognitiveJsonFormat },
+          { role: "user", content: prompt },
+        ],
+        ...(isReasoner ? {} : { response_format: { type: "json_object" } }),
+        max_tokens: 5000,
+      });
+      result = JSON.parse(extractJSON(r.choices[0].message.content || "{}"));
     } else {
       const ai = new GoogleGenAI({ apiKey: apiKey || process.env.GEMINI_API_KEY || "" });
       const r = await ai.models.generateContent({
@@ -354,7 +378,16 @@ app.post("/api/cognitive", async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error("Cognitive generation error:", error);
-    res.status(500).json({ error: "Erreur lors de l'analyse cognitive." });
+    const msg = error instanceof Error ? error.message : String(error);
+    let userError = "Erreur lors de l'analyse cognitive. Réessayez ou changez de modèle.";
+    if (msg.includes('401') || msg.toLowerCase().includes('unauthorized') || msg.toLowerCase().includes('invalid api key')) {
+      userError = "Clé API invalide ou expirée. Vérifiez votre clé dans les paramètres.";
+    } else if (msg.includes('429') || msg.toLowerCase().includes('rate limit')) {
+      userError = "Limite de requêtes atteinte. Attendez quelques secondes et réessayez.";
+    } else if (msg.toLowerCase().includes('json') || msg.toLowerCase().includes('parse') || msg.toLowerCase().includes('syntax')) {
+      userError = "Le modèle a retourné une réponse invalide. Réessayez ou utilisez un autre modèle.";
+    }
+    res.status(500).json({ error: userError });
   }
 });
 
@@ -423,7 +456,21 @@ app.post("/api/problem-solver", async (req, res) => {
       const text = block && block.type === "text" ? block.text : "{}";
       result = JSON.parse(extractJSON(text));
     } else if (provider === "deepseek") {
-      result = await generateWithDeepSeek(prompt, model, apiKey);
+      const deepseekPS = new OpenAI({
+        apiKey: apiKey || process.env.DEEPSEEK_API_KEY || "",
+        baseURL: "https://api.deepseek.com",
+      });
+      const isReasoner = model === "deepseek-reasoner";
+      const rPS = await deepseekPS.chat.completions.create({
+        model,
+        messages: [
+          { role: "system", content: sysInstruction + problemSolverJsonFormat },
+          { role: "user", content: prompt },
+        ],
+        ...(isReasoner ? {} : { response_format: { type: "json_object" } }),
+        max_tokens: 5000,
+      });
+      result = JSON.parse(extractJSON(rPS.choices[0].message.content || "{}"));
     } else {
       const ai = new GoogleGenAI({ apiKey: apiKey || process.env.GEMINI_API_KEY || "" });
       const r = await ai.models.generateContent({

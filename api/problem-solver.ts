@@ -204,6 +204,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.json(result);
   } catch (error) {
     console.error("Problem solver error:", error);
-    res.status(500).json({ error: "Erreur lors de l'analyse du problème." });
+    const msg = error instanceof Error ? error.message : String(error);
+    let userError = "Erreur lors de l'analyse du problème. Réessayez ou changez de modèle.";
+    if (msg.includes('401') || msg.toLowerCase().includes('unauthorized') || msg.toLowerCase().includes('invalid api key') || msg.toLowerCase().includes('authentication')) {
+      userError = "Clé API invalide ou expirée. Vérifiez votre clé dans les paramètres.";
+    } else if (msg.includes('429') || msg.toLowerCase().includes('rate limit')) {
+      userError = "Limite de requêtes atteinte. Attendez quelques secondes et réessayez.";
+    } else if (msg.toLowerCase().includes('json') || msg.toLowerCase().includes('parse') || msg.toLowerCase().includes('syntax')) {
+      userError = "Le modèle a retourné une réponse invalide. Réessayez ou utilisez un autre modèle.";
+    } else if (msg.includes('timeout') || msg.includes('abort')) {
+      userError = "Délai d'attente dépassé. Essayez avec un problème plus concis.";
+    }
+    res.status(500).json({ error: userError });
   }
 }
