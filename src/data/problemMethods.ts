@@ -1,0 +1,173 @@
+export interface ProblemMethod {
+  id: string;
+  name: string;
+  discipline: string;
+  emoji: string;
+  origin: string;
+  tagline: string;
+}
+
+export const PROBLEM_METHODS: ProblemMethod[] = [
+  {
+    id: '5-whys',
+    name: '5 Whys (5 Pourquoi)',
+    discipline: 'Industrie / Toyota',
+    emoji: '❓',
+    origin: 'Taiichi Ohno, Toyota Production System',
+    tagline: 'Remonter à la cause racine en posant "Pourquoi ?" cinq fois de suite.',
+  },
+  {
+    id: 'design-thinking',
+    name: 'Design Thinking',
+    discipline: 'Design / Innovation',
+    emoji: '🎨',
+    origin: 'Stanford d.school, IDEO',
+    tagline: 'Résoudre centrée sur l\'humain via empathie, idéation et prototypage rapide.',
+  },
+  {
+    id: 'first-principles',
+    name: 'First Principles Thinking',
+    discipline: 'Physique / Philosophie',
+    emoji: '⚗️',
+    origin: 'Aristote, réinterprété par Elon Musk',
+    tagline: 'Décomposer jusqu\'aux vérités fondamentales et reconstruire sans présupposés.',
+  },
+  {
+    id: 'systems-thinking',
+    name: 'Systems Thinking',
+    discipline: 'Cybernétique / Ingénierie',
+    emoji: '🔄',
+    origin: 'Jay Forrester, Donella Meadows',
+    tagline: 'Voir les boucles de rétroaction et interdépendances plutôt que les causes linéaires.',
+  },
+  {
+    id: 'theory-of-constraints',
+    name: 'Theory of Constraints',
+    discipline: 'Management / Production',
+    emoji: '🔗',
+    origin: 'Eliyahu Goldratt, "The Goal" (1984)',
+    tagline: 'Identifier et éliminer le goulot d\'étranglement qui limite tout le système.',
+  },
+  {
+    id: 'pdca',
+    name: 'Cycle PDCA',
+    discipline: 'Management Qualité',
+    emoji: '🔁',
+    origin: 'W. Edwards Deming, post-WW2 Japon',
+    tagline: 'Itérer en boucle : Planifier, Faire, Vérifier, Ajuster — sans jamais s\'arrêter.',
+  },
+  {
+    id: 'cbt-approach',
+    name: 'Approche Cognitivo-Comportementale',
+    discipline: 'Psychologie Clinique',
+    emoji: '🧠',
+    origin: 'Aaron Beck, Albert Ellis (1960s)',
+    tagline: 'Identifier les schémas de pensée dysfonctionnels qui amplifient le problème.',
+  },
+  {
+    id: 'inversion',
+    name: 'Inversion',
+    discipline: 'Mathématiques / Philosophie',
+    emoji: '🔃',
+    origin: 'Carl Jacobi, popularisé par Charlie Munger',
+    tagline: 'Résoudre un problème en pensant à l\'inverse : "Que faire pour garantir l\'échec ?"',
+  },
+  {
+    id: 'biomimicry',
+    name: 'Biomimétisme',
+    discipline: 'Biologie / Ingénierie',
+    emoji: '🌿',
+    origin: 'Janine Benyus, "Biomimicry" (1997)',
+    tagline: 'Imiter les 3,8 milliards d\'années d\'évolution de la nature pour résoudre des défis humains.',
+  },
+  {
+    id: 'appreciative-inquiry',
+    name: 'Appreciative Inquiry',
+    discipline: 'Psychologie Organisationnelle',
+    emoji: '✨',
+    origin: 'David Cooperrider, Case Western Reserve (1987)',
+    tagline: 'Partir des forces existantes plutôt que des déficits pour générer un changement durable.',
+  },
+  {
+    id: 'scamper',
+    name: 'SCAMPER',
+    discipline: 'Créativité / Innovation',
+    emoji: '🛠️',
+    origin: 'Bob Eberle, basé sur Alex Osborn',
+    tagline: 'Substituer, Combiner, Adapter, Modifier, Proposer un autre usage, Éliminer, Renverser.',
+  },
+  {
+    id: 'socratic-method',
+    name: 'Méthode Socratique',
+    discipline: 'Philosophie',
+    emoji: '🏛️',
+    origin: 'Socrate, Athènes Ve siècle av. J.-C.',
+    tagline: 'Révéler la vérité par un questionnement systématique qui déconstruit les présupposés.',
+  },
+  {
+    id: 'force-field',
+    name: 'Force Field Analysis',
+    discipline: 'Psychologie Sociale',
+    emoji: '⚖️',
+    origin: 'Kurt Lewin, "Field Theory" (1943)',
+    tagline: 'Cartographier les forces pour et contre le changement pour identifier où agir.',
+  },
+  {
+    id: 'triz',
+    name: 'TRIZ',
+    discipline: 'Ingénierie / Innovation',
+    emoji: '⚙️',
+    origin: 'Genrich Altshuller, URSS (1946)',
+    tagline: '40 principes inventifs extraits de l\'analyse de 400 000 brevets pour résoudre les contradictions.',
+  },
+  {
+    id: 'marginal-gains',
+    name: 'Marginal Gains',
+    discipline: 'Science du Sport',
+    emoji: '🚴',
+    origin: 'Dave Brailsford, British Cycling (2003)',
+    tagline: 'Améliorer chaque élément de 1% pour créer une amélioration totale spectaculaire.',
+  },
+  {
+    id: 'mental-models',
+    name: 'Latticework of Mental Models',
+    discipline: 'Multi-disciplinaire',
+    emoji: '🕸️',
+    origin: 'Charlie Munger, Berkshire Hathaway',
+    tagline: 'Utiliser simultanément des modèles issus de multiples disciplines pour voir ce que les autres ratent.',
+  },
+  {
+    id: 'cynefin',
+    name: 'Cynefin Framework',
+    discipline: 'Science de la Complexité',
+    emoji: '🗺️',
+    origin: 'Dave Snowden, IBM (1999)',
+    tagline: 'Classifier le type de problème (simple, compliqué, complexe, chaotique) avant d\'agir.',
+  },
+  {
+    id: 'neuroscience-reframing',
+    name: 'Reframing Cognitif (Neurosciences)',
+    discipline: 'Neurosciences Cognitives',
+    emoji: '🔬',
+    origin: 'Daniel Siegel, Lisa Feldman Barrett',
+    tagline: 'Utiliser la neuroplasticité pour reconstruire la représentation mentale du problème.',
+  },
+  {
+    id: 'lateral-thinking',
+    name: 'Lateral Thinking',
+    discipline: 'Psychologie / Créativité',
+    emoji: '💡',
+    origin: 'Edward de Bono (1967)',
+    tagline: 'Contourner les schémas logiques habituels pour générer des solutions non-conventionnelles.',
+  },
+  {
+    id: 'wicked-problems',
+    name: 'Wicked Problems Framework',
+    discipline: 'Sciences Sociales / Urbanisme',
+    emoji: '🌐',
+    origin: 'Horst Rittel & Melvin Webber (1973)',
+    tagline: 'Approcher les problèmes irréductibles en acceptant leur complexité et en agissant par itérations.',
+  },
+];
+
+export const METHOD_DISCIPLINES = [...new Set(PROBLEM_METHODS.map((m) => m.discipline))].sort();

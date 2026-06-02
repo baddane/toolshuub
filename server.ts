@@ -4,6 +4,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import OpenAI from "openai";
 import Anthropic from "@anthropic-ai/sdk";
 import dotenv from "dotenv";
+import { PROBLEM_METHODS } from "./src/data/problemMethods";
 
 dotenv.config();
 
@@ -354,6 +355,118 @@ app.post("/api/cognitive", async (req, res) => {
   } catch (error) {
     console.error("Cognitive generation error:", error);
     res.status(500).json({ error: "Erreur lors de l'analyse cognitive." });
+  }
+});
+
+function buildProblemSolverInstruction(problemDescription: string, additionalContext: string): string {
+  const methodsList = PROBLEM_METHODS.map(
+    (m) => `- ${m.name} [${m.discipline}] : ${m.tagline}`
+  ).join("\n");
+  return `Tu es un expert mondial en résolution de problèmes, avec une maîtrise encyclopédique des méthodes issues de TOUTES les disciplines humaines.
+
+PROBLÈME SOUMIS : "${problemDescription}"
+CONTEXTE ADDITIONNEL : "${additionalContext || 'Non spécifié'}"
+
+Méthodes disponibles :
+${methodsList}
+
+Sélectionne les 5 méthodes les plus adaptées à CE problème spécifique. Pour chaque méthode, produis une explication et une solution concrète appliquée au problème. Identifie la méthode à recommander en priorité (isTopRecommendation: true). Génère une synthèse comparative en Markdown et une mindmap Mermaid. Réponds TOUJOURS en français.`;
+}
+
+const problemSolverJsonFormat = `
+
+CRITIQUE : Réponds UNIQUEMENT avec du JSON valide. Structure exacte :
+{
+  "problemSummary": "string",
+  "selectedMethods": [
+    {"methodName": "string", "discipline": "string", "emoji": "string", "methodExplanation": "string", "appliedSolution": "string", "keySteps": ["string", "string", "string"], "isTopRecommendation": false}
+  ],
+  "synthesisMarkdown": "string",
+  "mindmapMermaid": "string",
+  "topRecommendation": "string"
+}`;
+
+app.post("/api/problem-solver", async (req, res) => {
+  const { problemDescription, additionalContext = "", model: requestedModel, provider = "gemini", apiKey = "" } = req.body;
+  if (!problemDescription || problemDescription.trim().length < 10) {
+    return res.status(400).json({ error: "problemDescription est requis (minimum 10 caractères)" });
+  }
+
+  const model = requestedModel || "gemini-3-flash-preview";
+  const sysInstruction = buildProblemSolverInstruction(problemDescription.trim(), additionalContext.trim());
+  const prompt = `Analyse ce problème et propose des solutions via les meilleures méthodes disponibles : ${problemDescription}`;
+
+  try {
+    let result: unknown;
+
+    if (provider === "openai") {
+      const openai = new OpenAI({ apiKey: apiKey || process.env.OPENAI_API_KEY || "" });
+      const r = await openai.chat.completions.create({
+        model,
+        messages: [
+          { role: "system", content: sysInstruction + problemSolverJsonFormat },
+          { role: "user", content: prompt },
+        ],
+        response_format: { type: "json_object" },
+        max_tokens: 5000,
+      });
+      result = JSON.parse(r.choices[0].message.content || "{}");
+    } else if (provider === "anthropic") {
+      const anthropic = new Anthropic({ apiKey: apiKey || process.env.ANTHROPIC_API_KEY || "" });
+      const r = await anthropic.messages.create({
+        model,
+        max_tokens: 5000,
+        system: sysInstruction + problemSolverJsonFormat,
+        messages: [{ role: "user", content: prompt }],
+      });
+      const block = r.content.find((b) => b.type === "text");
+      const text = block && block.type === "text" ? block.text : "{}";
+      result = JSON.parse(extractJSON(text));
+    } else if (provider === "deepseek") {
+      result = await generateWithDeepSeek(prompt, model, apiKey);
+    } else {
+      const ai = new GoogleGenAI({ apiKey: apiKey || process.env.GEMINI_API_KEY || "" });
+      const r = await ai.models.generateContent({
+        model,
+        contents: [{ parts: [{ text: prompt }] }],
+        config: {
+          systemInstruction: sysInstruction,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              problemSummary: { type: Type.STRING },
+              selectedMethods: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    methodName: { type: Type.STRING },
+                    discipline: { type: Type.STRING },
+                    emoji: { type: Type.STRING },
+                    methodExplanation: { type: Type.STRING },
+                    appliedSolution: { type: Type.STRING },
+                    keySteps: { type: Type.ARRAY, items: { type: Type.STRING } },
+                    isTopRecommendation: { type: Type.BOOLEAN },
+                  },
+                  required: ["methodName", "discipline", "emoji", "methodExplanation", "appliedSolution", "keySteps", "isTopRecommendation"],
+                },
+              },
+              synthesisMarkdown: { type: Type.STRING },
+              mindmapMermaid: { type: Type.STRING },
+              topRecommendation: { type: Type.STRING },
+            },
+            required: ["problemSummary", "selectedMethods", "synthesisMarkdown", "mindmapMermaid", "topRecommendation"],
+          },
+        },
+      });
+      result = JSON.parse(r.text || "{}");
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Problem solver error:", error);
+    res.status(500).json({ error: "Erreur lors de l'analyse du problème." });
   }
 });
 

@@ -31,6 +31,7 @@ import {
   Settings,
   Mail,
   Brain,
+  Target,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateYouTubeMetadata, YouTubeMetadata } from './services/geminiService';
@@ -38,6 +39,7 @@ import BlogList from './BlogList';
 import BlogArticlePage from './BlogArticle';
 import EmailImprover from './EmailImprover';
 import CognitiveLibrary from './CognitiveLibrary';
+import ProblemSolver from './ProblemSolver';
 import { blogArticles } from './blogData';
 import {
   PROVIDERS,
@@ -338,6 +340,15 @@ export default function App() {
               Livres
             </button>
             <button
+              onClick={() => navigate('/problem-solver')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                path === '/problem-solver' ? 'bg-amber-500/10 text-amber-400' : 'text-white/50 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Target className="w-4 h-4" />
+              Solver
+            </button>
+            <button
               onClick={() => navigate('/blog')}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
                 path.startsWith('/blog') ? 'bg-red-500/10 text-red-400' : 'text-white/50 hover:text-white hover:bg-white/5'
@@ -455,6 +466,8 @@ export default function App() {
           <EmailImprover onNavigate={navigate} />
         ) : path === '/cognitive' ? (
           <CognitiveLibrary onNavigate={navigate} />
+        ) : path === '/problem-solver' ? (
+          <ProblemSolver onNavigate={navigate} />
         ) : path === '/blog' ? (
           <BlogList onNavigate={navigate} />
         ) : path.startsWith('/blog/') ? (
@@ -881,6 +894,7 @@ export default function App() {
                 <li><button onClick={() => navigate('/')} className="text-sm text-white/30 hover:text-white transition-colors">Générateur de métadonnées</button></li>
                 <li><button onClick={() => navigate('/email')} className="text-sm text-white/30 hover:text-white transition-colors">Email AI</button></li>
                 <li><button onClick={() => navigate('/cognitive')} className="text-sm text-white/30 hover:text-white transition-colors">Cognitive Library</button></li>
+                <li><button onClick={() => navigate('/problem-solver')} className="text-sm text-white/30 hover:text-white transition-colors">Problem Solver</button></li>
                 <li><button onClick={() => navigate('/blog')} className="text-sm text-white/30 hover:text-white transition-colors">Blog YouTube SEO</button></li>
               </ul>
             </div>
