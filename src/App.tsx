@@ -29,13 +29,15 @@ import {
   EyeOff,
   X,
   Settings,
-  Mail
+  Mail,
+  Brain,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateYouTubeMetadata, YouTubeMetadata } from './services/geminiService';
 import BlogList from './BlogList';
 import BlogArticlePage from './BlogArticle';
 import EmailImprover from './EmailImprover';
+import CognitiveLibrary from './CognitiveLibrary';
 import { blogArticles } from './blogData';
 import {
   PROVIDERS,
@@ -327,6 +329,15 @@ export default function App() {
               Email AI
             </button>
             <button
+              onClick={() => navigate('/cognitive')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                path === '/cognitive' ? 'bg-purple-500/10 text-purple-400' : 'text-white/50 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Brain className="w-4 h-4" />
+              Livres
+            </button>
+            <button
               onClick={() => navigate('/blog')}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
                 path.startsWith('/blog') ? 'bg-red-500/10 text-red-400' : 'text-white/50 hover:text-white hover:bg-white/5'
@@ -442,6 +453,8 @@ export default function App() {
         {/* Router */}
         {path === '/email' ? (
           <EmailImprover onNavigate={navigate} />
+        ) : path === '/cognitive' ? (
+          <CognitiveLibrary onNavigate={navigate} />
         ) : path === '/blog' ? (
           <BlogList onNavigate={navigate} />
         ) : path.startsWith('/blog/') ? (
@@ -866,6 +879,8 @@ export default function App() {
               <h4 className="font-black text-xs uppercase tracking-widest text-white/50 mb-4">Outil</h4>
               <ul className="space-y-2">
                 <li><button onClick={() => navigate('/')} className="text-sm text-white/30 hover:text-white transition-colors">Générateur de métadonnées</button></li>
+                <li><button onClick={() => navigate('/email')} className="text-sm text-white/30 hover:text-white transition-colors">Email AI</button></li>
+                <li><button onClick={() => navigate('/cognitive')} className="text-sm text-white/30 hover:text-white transition-colors">Cognitive Library</button></li>
                 <li><button onClick={() => navigate('/blog')} className="text-sm text-white/30 hover:text-white transition-colors">Blog YouTube SEO</button></li>
               </ul>
             </div>

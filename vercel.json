@@ -5,6 +5,7 @@
   "rewrites": [
     { "source": "/api/generate", "destination": "/api/generate" },
     { "source": "/api/improve-email", "destination": "/api/improve-email" },
+    { "source": "/api/cognitive", "destination": "/api/cognitive" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

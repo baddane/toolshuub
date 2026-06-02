@@ -1,0 +1,198 @@
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  year: number;
+  category: string;
+  emoji: string;
+  summary: string;
+}
+
+export const COGNITIVE_BOOKS: Book[] = [
+  {
+    id: 'atomic-habits',
+    title: 'Atomic Habits',
+    author: 'James Clear',
+    year: 2018,
+    category: 'Productivité',
+    emoji: '⚛️',
+    summary: 'Transformer de petites habitudes en changements extraordinaires grâce à des systèmes 1% meilleurs chaque jour.',
+  },
+  {
+    id: 'lean-startup',
+    title: 'The Lean Startup',
+    author: 'Eric Ries',
+    year: 2011,
+    category: 'Entrepreneuriat',
+    emoji: '🚀',
+    summary: "Créer des entreprises et produits viables via la validation itérative et l'apprentissage validé.",
+  },
+  {
+    id: 'zero-to-one',
+    title: 'Zero to One',
+    author: 'Peter Thiel',
+    year: 2014,
+    category: 'Innovation',
+    emoji: '1️⃣',
+    summary: 'Comment créer quelque chose de radicalement nouveau plutôt que de copier ce qui existe déjà.',
+  },
+  {
+    id: 'thinking-fast-slow',
+    title: 'Thinking, Fast and Slow',
+    author: 'Daniel Kahneman',
+    year: 2011,
+    category: 'Psychologie',
+    emoji: '🧠',
+    summary: 'Les deux systèmes de pensée qui gouvernent nos décisions et comment éviter les biais cognitifs.',
+  },
+  {
+    id: 'deep-work',
+    title: 'Deep Work',
+    author: 'Cal Newport',
+    year: 2016,
+    category: 'Productivité',
+    emoji: '🔱',
+    summary: 'Cultiver la capacité à se concentrer profondément sur des tâches difficiles dans un monde de distractions.',
+  },
+  {
+    id: 'start-with-why',
+    title: 'Start With Why',
+    author: 'Simon Sinek',
+    year: 2009,
+    category: 'Leadership',
+    emoji: '🎯',
+    summary: "Les leaders inspirants communiquent d'abord leur Pourquoi avant leur Quoi et Comment.",
+  },
+  {
+    id: 'never-split-difference',
+    title: 'Never Split the Difference',
+    author: 'Chris Voss',
+    year: 2016,
+    category: 'Négociation',
+    emoji: '🤝',
+    summary: 'Techniques de négociation du FBI appliquées aux défis professionnels et personnels quotidiens.',
+  },
+  {
+    id: 'mom-test',
+    title: 'The Mom Test',
+    author: 'Rob Fitzpatrick',
+    year: 2013,
+    category: 'Entrepreneuriat',
+    emoji: '🔍',
+    summary: 'Comment valider une idée business en posant les bonnes questions, même à votre mère.',
+  },
+  {
+    id: 'blue-ocean',
+    title: 'Blue Ocean Strategy',
+    author: 'W. Chan Kim & R. Mauborgne',
+    year: 2004,
+    category: 'Stratégie',
+    emoji: '🌊',
+    summary: 'Créer de nouveaux espaces de marché sans concurrence plutôt que de se battre dans des marchés saturés.',
+  },
+  {
+    id: 'good-to-great',
+    title: 'Good to Great',
+    author: 'Jim Collins',
+    year: 2001,
+    category: 'Management',
+    emoji: '🏆',
+    summary: "Pourquoi certaines entreprises passent de bonnes à exceptionnelles — et comment elles y parviennent.",
+  },
+  {
+    id: 'four-hour-workweek',
+    title: 'The 4-Hour Workweek',
+    author: 'Timothy Ferriss',
+    year: 2007,
+    category: 'Productivité',
+    emoji: '⏰',
+    summary: 'Concevoir un style de vie entrepreneurial qui maximise la liberté et minimise le temps de travail nécessaire.',
+  },
+  {
+    id: 'influence',
+    title: 'Influence',
+    author: 'Robert Cialdini',
+    year: 1984,
+    category: 'Marketing',
+    emoji: '💡',
+    summary: 'Les 6 principes de persuasion qui influencent les décisions humaines et comment les utiliser éthiquement.',
+  },
+  {
+    id: 'emyth-revisited',
+    title: 'The E-Myth Revisited',
+    author: 'Michael E. Gerber',
+    year: 1995,
+    category: 'Entrepreneuriat',
+    emoji: '⚙️',
+    summary: 'Pourquoi la plupart des petites entreprises échouent et comment les transformer en systèmes reproductibles.',
+  },
+  {
+    id: 'rework',
+    title: 'Rework',
+    author: 'Jason Fried & DHH',
+    year: 2010,
+    category: 'Entrepreneuriat',
+    emoji: '🔄',
+    summary: 'Une nouvelle façon de voir le travail — plus directe, plus simple, qui rejette les conventions inutiles.',
+  },
+  {
+    id: 'innovator-dilemma',
+    title: "The Innovator's Dilemma",
+    author: 'Clayton Christensen',
+    year: 1997,
+    category: 'Innovation',
+    emoji: '💥',
+    summary: 'Comment les innovations disruptives renversent les leaders établis et comment anticiper ce phénomène.',
+  },
+  {
+    id: 'storybrand',
+    title: 'Building a StoryBrand',
+    author: 'Donald Miller',
+    year: 2017,
+    category: 'Marketing',
+    emoji: '📖',
+    summary: 'Clarifier votre message marketing en utilisant la structure narrative universelle du héros.',
+  },
+  {
+    id: '100m-offers',
+    title: '$100M Offers',
+    author: 'Alex Hormozi',
+    year: 2021,
+    category: 'Marketing',
+    emoji: '💰',
+    summary: 'Comment créer des offres si irrésistibles que les prospects se sentent idiots de refuser.',
+  },
+  {
+    id: 'this-is-marketing',
+    title: 'This Is Marketing',
+    author: 'Seth Godin',
+    year: 2018,
+    category: 'Marketing',
+    emoji: '📣',
+    summary: 'Le marketing consiste à servir des gens spécifiques et résoudre leurs vrais problèmes avec empathie.',
+  },
+  {
+    id: 'art-of-war',
+    title: "L'Art de la Guerre",
+    author: 'Sun Tzu',
+    year: -500,
+    category: 'Stratégie',
+    emoji: '⚔️',
+    summary: 'Les principes intemporels de stratégie militaire appliqués aux affaires, à la compétition et à la vie.',
+  },
+  {
+    id: 'crossing-chasm',
+    title: 'Crossing the Chasm',
+    author: 'Geoffrey Moore',
+    year: 1991,
+    category: 'Innovation',
+    emoji: '🌉',
+    summary: 'Comment franchir le gouffre entre adopteurs précoces et marché de masse pour les produits technologiques.',
+  },
+];
+
+export function getBookById(id: string): Book | undefined {
+  return COGNITIVE_BOOKS.find((b) => b.id === id);
+}
+
+export const BOOK_CATEGORIES = [...new Set(COGNITIVE_BOOKS.map((b) => b.category))].sort();

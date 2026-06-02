@@ -243,6 +243,120 @@ app.post("/api/improve-email", async (req, res) => {
   }
 });
 
+function buildCognitiveSystemInstruction(bookTitle: string, bookAuthor: string, userContext: string): string {
+  return `Tu es un expert en analyse de livres stratégiques et en application pratique des concepts business.
+
+Livre analysé : "${bookTitle}" par ${bookAuthor}
+Contexte professionnel de l'utilisateur : "${userContext}"
+
+Ta mission est de produire une analyse personnalisée, pratique et directement actionnable. Réponds TOUJOURS en français.
+
+Génère exactement :
+1. keyQuote : Une citation emblématique du livre (50-100 mots max, entre guillemets)
+2. coreConcepts : Exactement 5 concepts clés avec pour chacun :
+   - title : Nom du concept (3-6 mots)
+   - description : Explication claire du concept (2-3 phrases)
+   - application : Application concrète au contexte fourni (2-3 phrases précises)
+3. useCaseAnalysis : Analyse en Markdown (3-4 paragraphes). Utilise ## pour les titres, **gras** pour les points importants, et - pour les listes à puces.
+4. actionPlan : Exactement 5 étapes concrètes avec pour chacune :
+   - step : Numéro 1 à 5
+   - action : Action précise à effectuer dans les 30 prochains jours (1-2 phrases directes)
+   - impact : Résultat attendu de cette action (1 phrase)
+5. mindmapMermaid : Code Mermaid VALIDE pour une mindmap. Règles : première ligne "mindmap", deuxième ligne "  root((Titre Court))", nœuds avec 2 espaces par niveau, pas de caractères spéciaux dans les labels.`;
+}
+
+const cognitiveJsonFormat = `
+
+CRITIQUE : Réponds UNIQUEMENT avec du JSON valide, sans texte avant ni après. Structure exacte :
+{
+  "keyQuote": "string",
+  "coreConcepts": [{"title": "string", "description": "string", "application": "string"}],
+  "useCaseAnalysis": "string",
+  "actionPlan": [{"step": 1, "action": "string", "impact": "string"}],
+  "mindmapMermaid": "string"
+}`;
+
+app.post("/api/cognitive", async (req, res) => {
+  const { bookTitle, bookAuthor, userContext, model: requestedModel, provider = "gemini", apiKey = "" } = req.body;
+  if (!bookTitle || !userContext) {
+    return res.status(400).json({ error: "bookTitle and userContext sont requis" });
+  }
+
+  const model = requestedModel || "gemini-3-flash-preview";
+  const sysInstruction = buildCognitiveSystemInstruction(bookTitle, bookAuthor || "auteur inconnu", userContext);
+  const prompt = `Analyse le livre "${bookTitle}" de ${bookAuthor} et applique ses concepts au contexte suivant : ${userContext}`;
+
+  try {
+    let result: unknown;
+
+    if (provider === "openai") {
+      result = await generateWithOpenAI(prompt, model, apiKey);
+    } else if (provider === "anthropic") {
+      const anthropic = new Anthropic({ apiKey: apiKey || process.env.ANTHROPIC_API_KEY || "" });
+      const response = await anthropic.messages.create({
+        model,
+        max_tokens: 4096,
+        system: sysInstruction + cognitiveJsonFormat,
+        messages: [{ role: "user", content: prompt }],
+      });
+      const block = response.content.find((b) => b.type === "text");
+      const text = block && block.type === "text" ? block.text : "{}";
+      result = JSON.parse(extractJSON(text));
+    } else if (provider === "deepseek") {
+      result = await generateWithDeepSeek(prompt, model, apiKey);
+    } else {
+      const ai = new GoogleGenAI({ apiKey: apiKey || process.env.GEMINI_API_KEY || "" });
+      const r = await ai.models.generateContent({
+        model,
+        contents: [{ parts: [{ text: prompt }] }],
+        config: {
+          systemInstruction: sysInstruction,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              keyQuote: { type: Type.STRING },
+              coreConcepts: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    title: { type: Type.STRING },
+                    description: { type: Type.STRING },
+                    application: { type: Type.STRING },
+                  },
+                  required: ["title", "description", "application"],
+                },
+              },
+              useCaseAnalysis: { type: Type.STRING },
+              actionPlan: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    step: { type: Type.INTEGER },
+                    action: { type: Type.STRING },
+                    impact: { type: Type.STRING },
+                  },
+                  required: ["step", "action", "impact"],
+                },
+              },
+              mindmapMermaid: { type: Type.STRING },
+            },
+            required: ["keyQuote", "coreConcepts", "useCaseAnalysis", "actionPlan", "mindmapMermaid"],
+          },
+        },
+      });
+      result = JSON.parse(r.text || "{}");
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Cognitive generation error:", error);
+    res.status(500).json({ error: "Erreur lors de l'analyse cognitive." });
+  }
+});
+
 app.post("/api/generate", async (req, res) => {
   const { prompt, model: requestedModel, provider = "gemini", apiKey = "" } = req.body;
   if (!prompt) {
