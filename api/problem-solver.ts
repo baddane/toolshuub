@@ -3,7 +3,28 @@ import { GoogleGenAI, Type } from "@google/genai";
 import OpenAI from "openai";
 import Anthropic from "@anthropic-ai/sdk";
 
-import { PROBLEM_METHODS } from "../src/data/problemMethods";
+const PROBLEM_METHODS = [
+  { name: '5 Whys (5 Pourquoi)',                    discipline: 'Industrie / Toyota',                  tagline: 'Remonter à la cause racine en posant "Pourquoi ?" cinq fois de suite.' },
+  { name: 'Design Thinking',                         discipline: 'Design / Innovation',                 tagline: "Résoudre centrée sur l'humain via empathie, idéation et prototypage rapide." },
+  { name: 'First Principles Thinking',               discipline: 'Physique / Philosophie',              tagline: 'Décomposer jusqu\'aux vérités fondamentales et reconstruire sans présupposés.' },
+  { name: 'Systems Thinking',                        discipline: 'Cybernétique / Ingénierie',           tagline: 'Voir les boucles de rétroaction et interdépendances plutôt que les causes linéaires.' },
+  { name: 'Theory of Constraints',                   discipline: 'Management / Production',             tagline: "Identifier et éliminer le goulot d'étranglement qui limite tout le système." },
+  { name: 'Cycle PDCA',                              discipline: 'Management Qualité',                  tagline: 'Itérer en boucle : Planifier, Faire, Vérifier, Ajuster — sans jamais s\'arrêter.' },
+  { name: 'Approche Cognitivo-Comportementale',      discipline: 'Psychologie Clinique',                tagline: 'Identifier les schémas de pensée dysfonctionnels qui amplifient le problème.' },
+  { name: 'Inversion',                               discipline: 'Mathématiques / Philosophie',         tagline: 'Résoudre un problème en pensant à l\'inverse : "Que faire pour garantir l\'échec ?"' },
+  { name: 'Biomimétisme',                            discipline: 'Biologie / Ingénierie',               tagline: "Imiter les 3,8 milliards d'années d'évolution de la nature pour résoudre des défis humains." },
+  { name: 'Appreciative Inquiry',                    discipline: 'Psychologie Organisationnelle',       tagline: 'Partir des forces existantes plutôt que des déficits pour générer un changement durable.' },
+  { name: 'SCAMPER',                                 discipline: 'Créativité / Innovation',             tagline: "Substituer, Combiner, Adapter, Modifier, Proposer un autre usage, Éliminer, Renverser." },
+  { name: 'Méthode Socratique',                      discipline: 'Philosophie',                         tagline: 'Révéler la vérité par un questionnement systématique qui déconstruit les présupposés.' },
+  { name: 'Force Field Analysis',                    discipline: 'Psychologie Sociale',                 tagline: 'Cartographier les forces pour et contre le changement pour identifier où agir.' },
+  { name: 'TRIZ',                                    discipline: 'Ingénierie / Innovation',             tagline: "40 principes inventifs extraits de l'analyse de 400 000 brevets pour résoudre les contradictions." },
+  { name: 'Marginal Gains',                          discipline: 'Science du Sport',                    tagline: "Améliorer chaque élément de 1% pour créer une amélioration totale spectaculaire." },
+  { name: 'Latticework of Mental Models',            discipline: 'Multi-disciplinaire',                 tagline: "Utiliser simultanément des modèles issus de multiples disciplines pour voir ce que les autres ratent." },
+  { name: 'Cynefin Framework',                       discipline: 'Science de la Complexité',            tagline: 'Classifier le type de problème (simple, compliqué, complexe, chaotique) avant d\'agir.' },
+  { name: 'Reframing Cognitif (Neurosciences)',      discipline: 'Neurosciences Cognitives',            tagline: 'Utiliser la neuroplasticité pour reconstruire la représentation mentale du problème.' },
+  { name: 'Lateral Thinking',                        discipline: 'Psychologie / Créativité',            tagline: 'Contourner les schémas logiques habituels pour générer des solutions non-conventionnelles.' },
+  { name: 'Wicked Problems Framework',               discipline: 'Sciences Sociales / Urbanisme',       tagline: 'Approcher les problèmes irréductibles en acceptant leur complexité et en agissant par itérations.' },
+];
 
 function buildSystemInstruction(problemDescription: string, additionalContext: string): string {
   const methodsList = PROBLEM_METHODS.map(
