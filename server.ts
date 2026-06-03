@@ -421,8 +421,8 @@ CRITIQUE : Réponds UNIQUEMENT avec du JSON valide. Structure exacte :
 
 app.post("/api/problem-solver", async (req, res) => {
   const { problemDescription, additionalContext = "", model: requestedModel, provider = "gemini", apiKey = "" } = req.body;
-  if (!problemDescription || problemDescription.trim().length < 10) {
-    return res.status(400).json({ error: "problemDescription est requis (minimum 10 caractères)" });
+  if (!problemDescription || problemDescription.trim().length < 3) {
+    return res.status(400).json({ error: "problemDescription est requis (minimum 3 caractères)" });
   }
 
   const model = requestedModel || "gemini-3-flash-preview";

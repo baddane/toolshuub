@@ -201,8 +201,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     apiKey = "",
   } = req.body;
 
-  if (!problemDescription || problemDescription.trim().length < 10) {
-    return res.status(400).json({ error: "problemDescription est requis (minimum 10 caractères)" });
+  if (!problemDescription || problemDescription.trim().length < 3) {
+    return res.status(400).json({ error: "problemDescription est requis (minimum 3 caractères)" });
   }
 
   const model = requestedModel || "gemini-3-flash-preview";

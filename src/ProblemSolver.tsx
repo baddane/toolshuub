@@ -411,7 +411,7 @@ export default function ProblemSolver({ onNavigate: _onNavigate }: ProblemSolver
     }
   };
 
-  const canGenerate = problemDescription.trim().length >= 10 && !loading;
+  const canGenerate = problemDescription.trim().length >= 3 && !loading;
   const topMethod = result?.selectedMethods.find((m) => m.isTopRecommendation) ?? result?.selectedMethods[0];
 
   return (
@@ -463,8 +463,8 @@ export default function ProblemSolver({ onNavigate: _onNavigate }: ProblemSolver
             className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-amber-500/40 placeholder:text-white/20 resize-none transition-colors leading-relaxed"
           />
           <div className="flex items-center justify-between mt-2">
-            {problemDescription.length > 0 && problemDescription.length < 10 ? (
-              <p className="text-[10px] text-amber-400/70">Minimum 10 caractères</p>
+            {problemDescription.trim().length < 3 ? (
+              <p className="text-[10px] text-amber-400/70">{problemDescription.length === 0 ? 'Décrivez votre problème pour activer le bouton' : 'Encore quelques mots…'}</p>
             ) : (
               <div className="flex gap-2 flex-wrap">
                 {EXAMPLE_PROBLEMS.slice(0, 2).map((ex, i) => (
